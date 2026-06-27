@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equestria RPG & Ponytopia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+    /* --- CONFIGURAÇÕES DE CORES E FONTES --- */
+    :root {
+        --mlp-purple: #b79ced;
+        --mlp-dark-purple: #6a1b9a;
+        --mlp-gold: #e195ff;
+        --mlp-soft-gold: #f3d5ff;
+        --magic-fire: #d500f9;
+        --ponytopia-purple: #4a148c;
+    }
+
+    body {
+        font-family: 'Quicksand', sans-serif;
+        background: radial-gradient(circle, #fbc2eb 0%, #a6c1ee 100%);
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    /* --- TELAS DE LOGIN/CADASTRO --- */
+    .container {
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        margin: 60px auto;
+        border: 2px solid var(--mlp-purple);
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-sizing: border-box;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 500;
+    }
+
+    button {
+        background: var(--mlp-dark-purple);
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: bold;
+        transition: 0.3s;
+        margin-top: 15px;
+        font-size: 16px;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(106, 27, 154, 0.4);
+    }
+
+    .poney-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .avatar {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 4px solid transparent;
+        transition: 0.3s;
+        object-fit: cover;
+    }
+
+    .avatar.selected {
+        border-color: var(--mlp-gold);
+        transform: scale(1.1);
+        box-shadow: 0 0 15px var(--mlp-gold);
+    }
+
+    /* --- CARTA MÁGICA --- */
+    #portal-carta {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .envelope-container {
+        position: relative;
+        width: 350px;
+        height: 250px;
+        cursor: pointer;
+    }
+
+    .envelope-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: var(--mlp-purple);
+        border-radius: 0 0 20px 20px;
+        z-index: 1;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .envelope-front {
+        position: absolute;
+        bottom: 0;
+        width: 0;
+        height: 0;
+        border-right: 175px solid #9575cd;
+        border-bottom: 125px solid #9575cd;
+        border-left: 175px solid #9575cd;
+        border-top: 125px solid transparent;
+        z-index: 3;
+        border-radius: 0 0 20px 20px;
+        pointer-events: none;
+    }
+
+    .flap {
+        position: absolute;
+        top: 0;
+        width: 0;
+        height: 0;
+        border-left: 175px solid transparent;
+        border-right: 175px solid transparent;
+        border-top: 130px solid var(--mlp-dark-purple);
+        transform-origin: top;
+        transition: transform 0.6s ease;
+        z-index: 4;
+    }
+
+    .letter {
+        position: absolute;
+        bottom: 10px;
+        left: 5%;
+        width: 90%;
+        height: 100%;
+        background: #ffffff;
+        z-index: 2;
+        transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding: 20px;
+        box-sizing: border-box;
+        border: 5px solid var(--mlp-gold);
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .envelope-container:hover .flap {
+        transform: rotateX(180deg);
+        z-index: 1;
+    }
+
+    .envelope-container:hover .letter {
+        transform: translateY(-180px);
+        z-index: 5;
+    }
+
+    .burn-effect {
+        animation: spikeFire 1.5s forwards !important;
+    }
+
+    @keyframes spikeFire {
+        0% {
+            transform: translateY(-180px) scale(1);
+            background: white;
+        }
+
+        20% {
+            background: var(--magic-fire);
+            box-shadow: 0 0 50px var(--magic-fire);
+        }
+
+        100% {
+            transform: translateY(-800px) scale(0);
+            opacity: 0;
+            filter: blur(20px);
+        }
+    }
+
+    /* --- INTERFACE PONYTOPIA --- */
+    #main-app {
+        display: none;
+        background: #fdfaff;
+        min-height: 100vh;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    .topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--ponytopia-purple);
+        color: white;
+        padding: 12px 25px;
+        border-bottom: 4px solid var(--mlp-gold);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .menu-icon {
+        font-size: 28px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .menu-icon:hover {
+        color: var(--mlp-gold);
+    }
+
+    .perfil-topo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .perfil-topo img {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--mlp-gold);
+        object-fit: cover;
+    }
+
+    .nome-usuario-topo {
+        font-family: 'Pacifico', cursive;
+        font-size: 18px;
+        color: var(--mlp-gold);
+    }
+
+    /* Menu Lateral */
+    .menu-lateral {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100%;
+        background: #2e004f;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding-top: 80px;
+        z-index: 1000;
+        color: white;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+    }
+
+    .menu-lateral.ativo {
+        left: 0;
+    }
+
+    .menu-lateral h3 {
+        padding: 10px 20px;
+        font-family: 'Pacifico', cursive;
+        color: var(--mlp-gold);
+        font-size: 22px;
+        border-bottom: 1px solid rgba(225,149,255,0.2);
+        margin-bottom: 10px;
+    }
+
+    .menu-lateral a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+        border-left: 4px solid transparent;
+    }
+
+    .menu-lateral a:hover {
+        background: rgba(225, 149, 255, 0.1);
+        border-left: 4px solid var(--mlp-gold);
+        color: var(--mlp-gold);
+        padding-left: 30px;
+    }
+
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        z-index: 999;
+        backdrop-filter: blur(3px);
+    }
+
+    .overlay.ativo {
+        display: block;
+    }
+
+    main {
+        padding: 30px 20px;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .titulo-home {
+        font-family: 'Pacifico', cursive;
+        font-size: 42px;
+        color: var(--ponytopia-purple);
+        text-shadow: 2px 2px 0px var(--mlp-soft-gold);
+        margin-bottom: 5px;
+    }
+
+    .saudacao {
+        font-size: 18px;
+        color: #555;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .saudacao span {
+        color: var(--mlp-dark-purple);
+        font-family: 'Pacifico', cursive;
+        font-size: 22px;
+        margin-left: 5px;
+    }
+
+    .search-box {
+        margin-bottom: 30px;
+        max-width: 500px;
+    }
+
+    .search-box input {
+        border-radius: 30px;
+        padding: 15px 25px;
+        border: 2px solid #eee;
+        transition: 0.3s;
+        font-size: 16px;
+    }
+
+    .search-box input:focus {
+        border-color: var(--mlp-gold);
+        box-shadow: 0 0 10px rgba(225,149,255,0.2);
+        outline: none;
+    }
+
+    .categorias {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .cat {
+        background: white;
+        border: 2px solid #eee;
+        padding: 8px 18px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 700;
+        color: #777;
+        transition: 0.3s;
+    }
+
+    .cat:hover {
+        border-color: var(--mlp-gold);
+        color: var(--mlp-dark-purple);
+        background: #fdf0ff;
+        transform: scale(1.05);
+    }
+
+    .jogos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 25px;
+    }
+
+    .jogo-card {
+        background: white;
+        border-radius: 20px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: 0.3s;
+        border: 3px solid transparent;
+        cursor: pointer;
+    }
+
+    .jogo-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--mlp-gold);
+        box-shadow: 0 10px 25px rgba(225, 149, 255, 0.3);
+    }
+
+    .jogo-card img {
+        width: 100%;
+        border-radius: 15px;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        margin-bottom: 12px;
+    }
+
+    .jogo-card span {
+        font-weight: 700;
+        color: var(--ponytopia-purple);
+        font-size: 16px;
+    }
+
+    .modal-recompensa {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* ==========================================================
+       MAPA DE EQUESTRIA
+    ========================================================== */
+
+    #mapa-equestria-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle, #fbc2eb 0%, #a6c1ee 45%, #6a1b9a 100%);
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    #mapa-equestria-overlay.ativo {
+        display: flex;
+    }
+
+    #mapa-equestria-app {
+        width: 100%;
+        max-width: 1100px;
+        min-height: 90vh;
+        background: rgba(255,255,255,0.94);
+        border-radius: 30px;
+        border: 4px solid var(--mlp-gold);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        padding: 25px;
+        box-sizing: border-box;
+        text-align: center;
+        position: relative;
+    }
+
+    .mapa-voltar-home {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: auto;
+        margin: 0;
+        padding: 10px 18px;
+        border-radius: 20px;
+        background: var(--mlp-dark-purple);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        z-index: 5;
+    }
+
+    #mapa-titulo {
+        font-family: 'Pacifico', cursive;
+        color: var(--ponytopia-purple);
+        font-size: 38px;
+        margin: 45px 0 15px 0;
+        text-shadow: 2px 2px 0 var(--mlp-soft-gold);
+    }
+
+    .mapa-imagem-area {
+        position: relative;
+        width: 100%;
+        min-height: 520px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #mapa-imagem {
+        max-width: 90%;
+        max-height: 520px;
+        object-fit: contain;
+        border-radius: 20px;
+        border: 4px solid var(--mlp-purple);
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .mapa-seta {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(45deg, #ec407a, #ab47bc);
+        color: white;
+        font-size: 38px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        padding: 0;
+        margin: 0;
+    }
+
+    .mapa-seta:hover {
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .mapa-seta.esquerda {
+        left: 10px;
+    }
+
+    .mapa-seta.direita {
+        right: 10px;
+    }
+
+    #mapa-descricao {
+        color: #4a148c;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 18px;
+    }
+
+    #mapa-contador {
+        color: #8e24aa;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    @media (max-width: 700px) {
+        #mapa-equestria-app {
+            padding: 15px;
+            min-height: 92vh;
+        }
+
+        #mapa-titulo {
+            font-size: 28px;
+            margin-top: 55px;
+        }
+
+        .mapa-imagem-area {
+            min-height: 360px;
+        }
+
+        #mapa-imagem {
+            max-width: 100%;
+            max-height: 360px;
+        }
+
+        .mapa-seta {
+            width: 48px;
+            height: 48px;
+            font-size: 30px;
+        }
+
+        .mapa-seta.esquerda {
+            left: -5px;
+        }
+
+        .mapa-seta.direita {
+            right: -5px;
+        }
+    }
+
+    /* ==========================================================
+       RECOMPENSA DIÁRIA + ÁLBUM
+    ========================================================== */
+
+    #daily-reward-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20000;
+        display: none;
+        background: rgba(0,0,0,0.65);
+        backdrop-filter: blur(8px);
+    }
+
+    #daily-reward-overlay.ativo {
+        display: block;
+    }
+
+    #daily-reward-app {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #ffdff3, #e7dcff, #dff7ff);
+    }
+
+    #daily-reward-app::before {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1;
+        width: 1200px;
+        height: 1200px;
+        background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 70%);
+        top: -400px;
+        left: -400px;
+    }
+
+    #daily-reward-app * {
+        box-sizing: border-box;
+    }
+
+    #daily-reward-app button {
+        width: auto;
+        margin-top: 0;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    #daily-reward-app button:hover {
+        box-shadow: none;
+    }
+
+    .daily-close-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 7px 12px;
+        background: #6c529c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        z-index: 1000;
+        font-weight: bold;
+    }
+
+    .debug-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        background: #ff7b7b;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        z-index: 1000;
+        font-weight: bold;
+    }
+
+    .nav-menu {
+        position: relative;
+        z-index: 10;
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 8px;
+        border-radius: 50px;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .nav-btn {
+        padding: 10px 30px;
+        border: none;
+        background: transparent;
+        color: #8a6cb5;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 40px;
+        transition: 0.3s;
+    }
+
+    .nav-btn.active {
+        background: #b194e8;
+        color: white;
+        box-shadow: 0 5px 15px rgba(177, 148, 232, 0.4);
+    }
+
+    .view-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .tab-panel {
+        display: none;
+        width: 100%;
+        max-width: 1100px;
+        height: 100%;
+        animation: fadeIn 0.4s ease forwards;
+    }
+
+    .tab-panel.active-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .chest-container {
+        position: relative;
+        z-index: 20;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 35px;
+        border-radius: 30px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 45px rgba(140, 100, 200, 0.15);
+        border: 4px solid white;
+        animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 450px;
+        width: 90%;
+    }
+
+    .chest-wrapper {
+        position: relative;
+        width: 120px;
+        height: 110px;
+        margin-bottom: 20px;
+        pointer-events: none;
+    }
+
+    .real-chest {
+        width: 100px;
+        height: 65px;
+        background: #a06a42;
+        border: 4px solid #5e3a1e;
+        border-radius: 0 0 12px 12px;
+        position: absolute;
+        bottom: 0;
+        left: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        z-index: 4;
+    }
+
+    .chest-lid {
+        width: 100px;
+        height: 34px;
+        background: #bd8458;
+        border: 4px solid #5e3a1e;
+        border-radius: 20px 20px 0 0;
+        position: absolute;
+        top: 15px;
+        left: 10px;
+        z-index: 5;
+        transform-origin: bottom center;
+        transition: transform 0.6s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    }
+
+    .chest-lid::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 38px;
+        width: 16px;
+        height: 16px;
+        background: #ffd700;
+        border: 2px solid #b89200;
+        border-radius: 4px;
+    }
+
+    .open-chest .chest-lid {
+        transform: translateY(-25px) scaleY(0.3) rotateX(180deg);
+    }
+
+    .chest-title {
+        color: #6c529c;
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+    }
+
+    .chest-desc {
+        color: #777;
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        position: relative;
+        z-index: 30;
+    }
+
+    .btn-refuse {
+        padding: 12px 30px;
+        background: #ffb7b7;
+        color: #8a4343;
+        border: none;
+        border-radius: 60px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-refuse:hover {
+        transform: scale(1.05);
+        background: #ffa1a1;
+    }
+
+    .pack-wrapper {
+        position: relative;
+        z-index: 15;
+        width: 400px;
+        max-width: 90vw;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .popup-pack {
+        animation: emergePack 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .pack-half {
+        width: 100%;
+        height: auto;
+        display: block;
+        -webkit-user-drag: none;
+        filter: drop-shadow(0 30px 60px rgba(0,0,0,0.15));
+        transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .pack-top {
+        position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        z-index: 12;
+    }
+
+    .pack-bottom {
+        position: absolute;
+        top: 0;
+        left: 0;
+        clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+        z-index: 11;
+    }
+
+    .stage-1 .pack-half {
+        animation: shake-light 0.3s infinite;
+    }
+
+    .stage-2 .pack-half {
+        animation: shake-heavy 0.2s infinite;
+        filter: brightness(1.2) drop-shadow(0 0 40px rgba(255,255,255,0.6));
+    }
+
+    .stage-3 .pack-top {
+        transform: translateY(-110px) rotateX(25deg) rotateZ(-3deg);
+    }
+
+    .stage-3 .pack-bottom {
+        transform: translateY(40px) rotateX(-20deg) rotateZ(2deg);
+    }
+
+    .stage-4 .pack-top {
+        transform: translateY(-1300px) scale(0.1);
+        opacity: 0;
+    }
+
+    .stage-4 .pack-bottom {
+        transform: translateY(1300px) scale(0.1);
+        opacity: 0;
+    }
+
+    .reward-screen {
+        display: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    .show-reward .reward-screen {
+        display: block;
+        animation: zoomIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .cards-container {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 25px 0;
+        flex-wrap: wrap;
+    }
+
+    .card-container-wrapper {
+        position: relative;
+    }
+
+    .repeat-tag {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ff4747;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        z-index: 50;
+        animation: zoomIn 0.3s ease;
+    }
+
+    .card {
+        width: 140px;
+        height: 195px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border: 5px solid white;
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .reveal-card {
+        opacity: 0;
+        transform: translateY(40px);
+        animation: cardAppear 0.5s forwards;
+    }
+
+    .album-wrapper {
+        width: 100%;
+        height: 80vh;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 25px;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        border: 4px solid #fff;
+        overflow-y: auto;
+        text-align: center;
+    }
+
+    .album-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .album-wrapper .card {
+        width: 100%;
+        height: 155px;
+    }
+
+    .album-wrapper .card:not(.locked) {
+        cursor: pointer;
+    }
+
+    .album-wrapper .card:not(.locked):hover {
+        transform: scale(1.08);
+        box-shadow: 0 12px 25px rgba(177, 148, 232, 0.4);
+    }
+
+    .card.locked {
+        filter: grayscale(1) brightness(0.6);
+        opacity: 0.4;
+        border: 4px dashed #bbb;
+    }
+
+    .daily-message {
+        background: #fff;
+        color: #a385e0;
+        padding: 15px 30px;
+        border-radius: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        z-index: 100;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 25px;
+        text-align: center;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        max-width: 90%;
+        width: 340px;
+        transform: scale(0.7);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-overlay.show .modal-content {
+        transform: scale(1);
+    }
+
+    .modal-card-view {
+        width: 100%;
+        height: 400px;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 8px solid #f3ecff;
+        margin-bottom: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .modal-card-view img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .modal-title {
+        color: #6c529c;
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .btn-action {
+        padding: 12px 40px;
+        background: #b194e8;
+        color: white;
+        border: none;
+        border-radius: 60px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(177, 148, 232, 0.4);
+        transition: 0.3s ease;
+    }
+
+    .btn-action:hover {
+        transform: scale(1.05);
+        background: #9b7ad9;
+    }
+
+    @keyframes shake-light {
+        0%, 100% {
+            transform: translate(0,0);
+        }
+
+        50% {
+            transform: translate(2px, 2px);
+        }
+    }
+
+    @keyframes shake-heavy {
+        0%, 100% {
+            transform: translate(0,0);
+        }
+
+        25% {
+            transform: translate(-5px, 5px);
+        }
+
+        75% {
+            transform: translate(5px, -5px);
+        }
+    }
+
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes cardAppear {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes emergePack {
+        from {
+            transform: scale(0.1) translateY(300px);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .nav-menu {
+            flex-direction: column;
+            border-radius: 24px;
+            gap: 8px;
+            margin-top: 55px;
+        }
+
+        .nav-btn {
+            font-size: 0.95rem;
+            padding: 10px 18px;
+        }
+
+        .cards-container {
+            gap: 10px;
+        }
+
+        .card {
+            width: 105px;
+            height: 150px;
+        }
+
+        .modal-card-view {
+            height: 330px;
+        }
+    }
+
+    /* ==========================================================
+       BOUTIQUE DA RARITY
+    ========================================================== */
+
+    #boutique-rarity-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 30000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0,0,0,0.82);
+        backdrop-filter: blur(8px);
+    }
+
+    #boutique-rarity-overlay.ativo {
+        display: flex;
+    }
+
+    #boutique-rarity-app {
+        width: 100%;
+        min-height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+        background: radial-gradient(circle, #251242 0%, #050208 100%);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 20px;
+    }
+
+    #boutique-rarity-app * {
+        box-sizing: border-box;
+    }
+
+    #boutique-rarity-app button {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    #boutique-rarity-app button:hover {
+        box-shadow: none;
+    }
+
+    .boutique-close-btn {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 100;
+        width: auto;
+        margin: 0;
+        padding: 8px 14px;
+        border: none;
+        border-radius: 12px;
+        background: #cbb4ff;
+        color: #0c0418;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #boutique-rarity-app .app-viewport {
+        width: 95%;
+        max-width: 550px;
+        position: relative;
+        box-shadow: 0 0 80px rgba(0,0,0,0.95);
+        border-radius: 25px;
+        overflow: hidden;
+        line-height: 0;
+        background: #0c0418;
+    }
+
+    #boutique-rarity-app .screen {
+        display: none;
+        width: 100%;
+        position: relative;
+    }
+
+    #boutique-rarity-app .screen.active {
+        display: block;
+    }
+
+    #boutique-rarity-app img.bg-screen {
+        width: 100%;
+        display: block;
+    }
+
+    #botao-play-capa {
+        position: absolute;
+        top: 67.5%;
+        left: 49.5%;
+        transform: translate(-50%, -50%);
+        width: 55px;
+        height: 55px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        background: transparent;
+        margin: 0;
+        padding: 0;
+    }
+
+    #screen-select {
+        position: relative;
+    }
+
+    #boutique-rarity-app .hitbox-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #boutique-rarity-app .hitbox {
+        position: absolute;
+        cursor: pointer;
+        border-radius: 15px;
+    }
+
+    #boutique-rarity-app .hb-rarity {
+        top: 18%;
+        left: 12%;
+        width: 35%;
+        height: 32%;
+    }
+
+    #boutique-rarity-app .hb-fluttershy {
+        top: 18%;
+        left: 53%;
+        width: 35%;
+        height: 32%;
+    }
+
+    #boutique-rarity-app .hb-twilight {
+        top: 52%;
+        left: 12%;
+        width: 35%;
+        height: 32%;
+    }
+
+    #boutique-rarity-app .hb-pinkie {
+        top: 52%;
+        left: 53%;
+        width: 35%;
+        height: 32%;
+    }
+
+    #screen-boutique {
+        padding: 40px 20px;
+        background: #0c0418;
+        text-align: center;
+        min-height: 500px;
+        line-height: normal;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #screen-boutique.active {
+        display: flex;
+    }
+
+    #boutique-rarity-app .pony-display {
+        width: 100%;
+        height: 200px;
+        border: 3px solid #cbb4ff;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 1.5em;
+        background: rgba(255,255,255,0.05);
+        white-space: pre-line;
+    }
+
+    #boutique-rarity-app .clothes {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        width: 100%;
+    }
+
+    #boutique-rarity-app .cloth {
+        background: white;
+        color: black;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #boutique-rarity-app .btn-voltar {
+        width: auto;
+        margin-top: 20px;
+        background: none;
+        border: 2px solid white;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container" id="tela-cadastro">
+    <h1 style="font-family:'Pacifico'; font-size: 30px; color: var(--mlp-dark-purple);">Criar Conta</h1>
+    <input id="reg-nome" placeholder="Nome de Usuário">
+    <input id="reg-nascimento" placeholder="Data de Nascimento (dd/mm/aaaa)" maxlength="10" oninput="formatarData(this)">
+    <select id="reg-genero">
+        <option value="">Selecione o Gênero</option>
+        <option>Feminino</option>
+        <option>Masculino</option>
+        <option>Outro</option>
+    </select>
+    <input type="password" id="reg-senha" placeholder="Sua senha">
+    <button onclick="irParaSelecao()">Próximo: Escolher Avatar</button>
+    <p style="cursor:pointer; color:var(--mlp-dark-purple); font-weight:bold; margin-top:15px;" onclick="mostrarLogin()">Já tenho conta</p>
+</div>
+
+<div class="container" id="tela-selecao" style="display:none">
+    <h1 style="font-family:'Pacifico'; font-size: 30px; color: var(--mlp-dark-purple);">Escolha seu Pônei</h1>
+    <div class="poney-list" id="lista-avatares"></div>
+    <button onclick="finalizarCadastro()">Concluir Cadastro</button>
+</div>
+
+<div class="container" id="tela-login" style="display:none">
+    <h1 style="font-family:'Pacifico'; font-size: 30px; color: var(--mlp-dark-purple);">Bem-vindo!</h1>
+    <input id="log-nome" placeholder="Seu nome">
+    <input id="log-senha" type="password" placeholder="Sua senha">
+    <button onclick="entrar()">Entrar no Jogo</button>
+    <button style="background:#6c757d" onclick="entrarVisitante()">Entrar como Visitante</button>
+    <p style="cursor:pointer; color:var(--mlp-dark-purple); font-weight:bold; margin-top:15px;" onclick="mostrarCadastro()">Criar conta</p>
+</div>
+
+<div id="portal-carta">
+    <div class="envelope-container">
+        <div class="flap"></div>
+        <div class="envelope-front"></div>
+        <div class="letter" id="letter">
+            <div>
+                <h2 style="font-family: 'Pacifico'; color: var(--mlp-dark-purple);">Caro(a) <span id="magic-user-name"></span>,</h2>
+                <p style="font-weight:600;">Um novo destino aguarda em Equestria. Aceita o chamado?</p>
+            </div>
+            <div style="display:flex; gap:10px; justify-content:center; margin-top: 20px;">
+                <button style="width:100px; border-radius:20px; background:var(--mlp-gold); color:white" onclick="queimarCarta()">SIM!</button>
+                <button id="btn-nao" style="width:100px; border-radius:20px; background:#ddd; color:#333">NÃO</button>
+            </div>
+        </div>
+        <div class="envelope-wrapper"></div>
+    </div>
+</div>
+
+<div id="main-app">
+    <header class="topo">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="perfil-topo">
+            <img id="home-avatar">
+            <span id="home-user-name" class="nome-usuario-topo"></span>
+        </div>
+    </header>
+
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <nav id="menu-lat" class="menu-lateral">
+        <h3>🎮 Atividades</h3>
+        <a href="#" onclick="abrirMapaEquestria(); toggleMenu();"><span>🗺️</span> Mapa de Equestria</a>
+        <a href="#"><span>🌈</span> Galeria de Arte</a>
+        <a href="#" onclick="abrirQuiz(); toggleMenu();"><span>🧠</span> Teste de Elementos</a>
+        <a href="#" onclick="abrirPonyColor(); toggleMenu();"><span>📖</span> Diário Mágico</a>
+        <a href="#" onclick="abrirRecompensaDiaria(); toggleMenu();"><span>🎁</span> Recompensa Diária</a>
+        <h3>⚙️ Perfil</h3>
+        <a href="#">Personalizar Pônei</a>
+        <a href="#" onclick="location.reload()" style="color:#ff7675">Encerrar Sessão</a>
+    </nav>
+
+    <main>
+        <div class="titulo-home">Ponytopia</div>
+        <div class="saudacao">Olá, <span id="saudacao-nome"></span> 👋</div>
+
+        <div class="search-box">
+            <input type="text" id="pesquisa" placeholder="O que vamos fazer hoje?..." onkeyup="filtrarJogos()">
+        </div>
+
+        <div class="categorias">
+            <div class="cat" onclick="filtrarCategoria('todos')">Tudo</div>
+            <div class="cat" onclick="filtrarCategoria('rpg')">Aventura RPG</div>
+            <div class="cat" onclick="filtrarCategoria('quiz')">Testes</div>
+            <div class="cat" onclick="filtrarCategoria('social')">Amizade</div>
+        </div>
+
+        <div class="jogos-grid" id="grid-jogos">
+
+            <div class="jogo-card" data-nome="mapa rpg aventura" data-cat="rpg" onclick="abrirMapaEquestria()">
+                <img src="https://static.wikia.nocookie.net/mlp/images/a/a4/Map_of_Equestria_2015.jpg">
+                <span>Explorar Mapa</span>
+            </div>
+
+            <div class="jogo-card" data-nome="quiz elementos" data-cat="quiz" onclick="abrirQuiz()">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLcS6NnetzUhMydMsgoVqH--MRvgEEOdM2pB8zBA2XFxGw68DoST-Honi6jydIv-1jm7eHEaLX_DptXWURHIAJ8tr3z4BCihCgEUMnGMpvoQ&s=10">
+                <span>Teste de Personalidade</span>
+            </div>
+
+           <div class="jogo-card" data-nome="diario sentimentos pintura ponycolor" data-cat="social" onclick="abrirPonyColor()">
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfsKVElxJR57blusabDhZZgE8RK7COxWgPqowcREHKQ9etkKq3qQT2MfTBAOz0BaqwiXMGaVUsYR5XOHF3mAKRrQxPjIOuhl1ixwRp9JGF&s=10">
+
+<span>Diário de Amizade</span>
+
+</div>
+
+            <div class="jogo-card" data-nome="vestir raridade boutique rarity moda" data-cat="social" onclick="abrirBoutiqueRarity()">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrX51t_lIv-XJw9lQHe2lkAWGZm6KBkOwrOIpBtnouBpYVWuQsaNGJvRgkhcnROL70xYvyWXk8IYnGdfxp51X6651Mkn2nq1vQg8R3jAWe&s=10">
+                <span>Boutique da Rarity</span>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- ==========================================================
+     MAPA DE EQUESTRIA
+========================================================== -->
+<div id="mapa-equestria-overlay">
+    <div id="mapa-equestria-app">
+
+        <button class="mapa-voltar-home" onclick="fecharMapaEquestria()">
+            ⬅ Voltar para Home
+        </button>
+
+        <h1 id="mapa-titulo">Mapa de Equestria</h1>
+
+        <div class="mapa-imagem-area">
+            <button class="mapa-seta esquerda" onclick="lugarAnterior()">‹</button>
+
+            <img id="mapa-imagem" src="" alt="Lugar de Equestria">
+
+            <button class="mapa-seta direita" onclick="proximoLugar()">›</button>
+        </div>
+
+        <div id="mapa-descricao">Explore os lugares mágicos de Equestria</div>
+        <div id="mapa-contador">Lugar 1 de 12</div>
+
+    </div>
+</div>
+
+<!-- Modal antigo mantido -->
+<div id="modal-recompensa" class="modal-recompensa">
+    <div class="container" style="max-width:300px">
+        <h2 style="font-family:'Pacifico'; color: var(--mlp-dark-purple);">Presente Real!</h2>
+        <div style="font-size:60px; margin: 15px 0;">🎁</div>
+        <p style="font-weight:700">Você recebeu 100 Cristais do Império!</p>
+        <button onclick="fecharRecompensa()" style="background:var(--mlp-gold); color:white">Receber</button>
+    </div>
+</div>
+
+<!-- ==========================================================
+     RECOMPENSA DIÁRIA + ÁLBUM
+========================================================== -->
+<div id="daily-reward-overlay">
+    <div id="daily-reward-app">
+
+        <button class="daily-close-btn" onclick="fecharRecompensaDiaria()">Fechar</button>
+        <button class="debug-btn" onclick="resetarTeste()">Resetar Teste (Limpar Dia)</button>
+
+        <div class="nav-menu">
+            <button class="nav-btn active" id="btn-tab-pacote" onclick="mudarAba('pacote')">🎁 Recompensa Diária</button>
+            <button class="nav-btn" id="btn-tab-album" onclick="mudarAba('album')">📖 Meu Álbum (<span id="total-obtidas">0</span>/22)</button>
+        </div>
+
+        <div class="view-content" id="main-container">
+
+            <div id="panel-pacote" class="tab-panel active-panel">
+
+                <div id="aviso-diario" class="daily-message" style="display: none;">
+                    ✨ Você já abriu o pacote de hoje! Volte amanhã ou veja seu álbum. ✨
+                </div>
+
+                <div id="tela-bau" class="chest-container">
+                    <div class="chest-wrapper" id="chest-box">
+                        <div class="chest-lid"></div>
+                        <div class="real-chest"></div>
+                    </div>
+                    <h2 class="chest-title">Lembrete do Dia!</h2>
+                    <p class="chest-desc">Seu pacote diário está disponível. Deseja coletar suas 5 figurinhas?</p>
+                    <div class="btn-group" id="botoes-recompensa">
+                        <button class="btn-action" onclick="aceitarRecompensa()">Coletar 🎁</button>
+                        <button class="btn-refuse" onclick="recusarRecompensa()">Recusar</button>
+                    </div>
+                </div>
+
+                <div id="pacote" class="pack-wrapper" style="display: none;">
+                    <img src="pacote.png" class="pack-half pack-top" alt="Pacote" onerror="this.src='https://via.placeholder.com/400x500/b194e8/ffffff?text=Clique+para+Abrir!'">
+                    <img src="pacote.png" class="pack-half pack-bottom" alt="Pacote" onerror="this.src='https://via.placeholder.com/400x500/b194e8/ffffff?text=Clique+para+Abrir!'">
+                </div>
+
+                <div id="reward" class="reward-screen">
+                    <h1 style="color: #a385e0; font-size: 2.2rem; text-shadow: 2px 2px white;">✦ NOVAS FIGURINHAS! ✦</h1>
+                    <div class="cards-container" id="display-cartas"></div>
+                    <button class="btn-action" onclick="irParaOAlbum()">Guardar e Ver Álbum</button>
+                </div>
+            </div>
+
+            <div id="panel-album" class="tab-panel">
+                <div class="album-wrapper">
+                    <h2 style="color: #6c529c; font-size: 1.8rem;">📖 Minhas Figurinhas Coletadas</h2>
+                    <p style="color: #888; font-size: 0.9rem; margin-bottom: 10px;">Clique em uma figurinha colorida para ampliá-la!</p>
+                    <div class="album-grid" id="album-grid"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-overlay" id="carta-modal" onclick="fecharModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-card-view">
+                    <img id="modal-img" src="" alt="Carta Grande">
+                </div>
+                <div class="modal-title" id="modal-nome">Nome do Pônei</div>
+                <button class="btn-action" onclick="fecharModal()">Fechar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ==========================================================
+     BOUTIQUE DA RARITY
+========================================================== -->
+<div id="boutique-rarity-overlay">
+    <div id="boutique-rarity-app">
+
+        <button class="boutique-close-btn" onclick="fecharBoutiqueRarity()">Fechar</button>
+
+        <div class="app-viewport">
+
+            <div id="screen-cover" class="screen active">
+                <img src="./img/rarity.png?v=1" class="bg-screen" alt="Capa" onerror="this.onerror=null; this.src='rarity.png?v=1';">
+                <button id="botao-play-capa" onclick="boutiqueShowScreen('screen-select')"></button>
+            </div>
+
+            <div id="screen-select" class="screen">
+                <img src="./img/poneis.png?v=1" class="bg-screen" alt="Seleção de Pôneis" onerror="this.onerror=null; this.src='poneis.png?v=1';">
+                <div class="hitbox-container">
+                    <div class="hitbox hb-rarity" onclick="boutiqueSelectPony('Rarity')"></div>
+                    <div class="hitbox hb-fluttershy" onclick="boutiqueSelectPony('Fluttershy')"></div>
+                    <div class="hitbox hb-twilight" onclick="boutiqueSelectPony('Twilight Sparkle')"></div>
+                    <div class="hitbox hb-pinkie" onclick="boutiqueSelectPony('Pinkie Pie')"></div>
+                </div>
+            </div>
+
+            <div id="screen-boutique" class="screen">
+                <h2 id="title" style="margin-top:0">Boutique</h2>
+                <div id="ponyDisplay" class="pony-display">Pônei</div>
+                <div id="clothes" class="clothes"></div>
+                <button class="btn-voltar" onclick="boutiqueShowScreen('screen-select')">Sair da Boutique</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const poneyMap = {
+        'Twilight': 'https://media.wired.com/photos/59337ed17965e75f5f3c8503/3:2/w_2560%2Cc_limit/MLP-Twilight.jpg',
+        'Fluttershy': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcko1WFEG5FIPA6grJXd1cWJAXiSHAQP0LdzVhOdGJqpi-V0b0it6CxiKlAjuldaNIOs3DutSq5MAlWRPmgMXkgBnC9iWvw8Kga-tLL_Bh&s=10',
+        'Rainbow': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGk1NmbGDPaUJCLlN4uhOtHeJTsAWeBvh3Eg6_wJ0YIOOnbHjn3vZ4NbVPd8XT1D9i_4l21vlY-Xg4sX_8j5nZ5qZexcBFiDbxyxXq_xZdZQ&s=10',
+        'Rarity': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrX51t_lIv-XJw9lQHe2lkAWGZm6KBkOwrOIpBtnouBpYVWuQsaNGJvRgkhcnROL70xYvyWXk8IYnGdfxp51X6651Mkn2nq1vQg8R3jAWe&s=10',
+        'Applejack': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfsKVElxJR57blusabDhZZgE8RK7COxWgPqowcREHKQ9etkKq3qQT2MfTBAOz0BaqwiXMGaVUsYR5XOHF3mAKRrQxPjIOuhl1ixwRp9JGF&s=10',
+        'Pinkie': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLcS6NnetzUhMydMsgoVqH--MRvgEEOdM2pB8zBA2XFxGw68DoST-Honi6jydIv-1jm7eHEaLX_DptXWURHIAJ8tr3z4BCihCgEUMnGMpvoQ&s=10'
+    };
+
+    let poneySelecionado = "";
+    let usuarioAtual = null;
+
+    const listaDiv = document.getElementById('lista-avatares');
+
+    Object.keys(poneyMap).forEach(nome => {
+        const img = document.createElement('img');
+        img.src = poneyMap[nome];
+        img.className = 'avatar';
+        img.onclick = () => {
+            poneySelecionado = nome;
+            document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
+            img.classList.add('selected');
+        };
+        listaDiv.appendChild(img);
+    });
+
+    function mostrarLogin() {
+        document.getElementById('tela-cadastro').style.display = 'none';
+        document.getElementById('tela-login').style.display = 'block';
+    }
+
+    function mostrarCadastro() {
+        document.getElementById('tela-cadastro').style.display = 'block';
+        document.getElementById('tela-login').style.display = 'none';
+    }
+
+    function irParaSelecao() {
+        if (!document.getElementById('reg-nome').value) return alert("Por favor, digite seu nome!");
+        document.getElementById('tela-cadastro').style.display = 'none';
+        document.getElementById('tela-selecao').style.display = 'block';
+    }
+
+    function finalizarCadastro() {
+        if (!poneySelecionado) return alert("Escolha seu pônei favorito!");
+
+        const user = {
+            nome: document.getElementById('reg-nome').value,
+            senha: btoa(document.getElementById('reg-senha').value),
+            poney: poneySelecionado
+        };
+
+        localStorage.setItem("user_" + user.nome, JSON.stringify(user));
+        usuarioAtual = user;
+        document.getElementById('tela-selecao').style.display = 'none';
+        iniciarFluxoCarta();
+    }
+
+    function entrar() {
+        const nome = document.getElementById('log-nome').value;
+        const senha = btoa(document.getElementById('log-senha').value);
+        const salvo = JSON.parse(localStorage.getItem("user_" + nome));
+
+        if (salvo && salvo.senha === senha) {
+            usuarioAtual = salvo;
+            iniciarFluxoCarta();
+        } else {
+            alert("Dados incorretos!");
+        }
+    }
+
+    function entrarVisitante() {
+        usuarioAtual = {
+            nome: "Visitante",
+            poney: "Twilight"
+        };
+        iniciarFluxoCarta();
+    }
+
+    function iniciarFluxoCarta() {
+        localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(usuarioAtual));
+
+        document.getElementById('tela-cadastro').style.display = 'none';
+        document.getElementById('tela-selecao').style.display = 'none';
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('main-app').style.display = 'none';
+
+        document.getElementById('portal-carta').style.display = 'flex';
+        document.getElementById('magic-user-name').innerText = usuarioAtual.nome;
+    }
+
+    function queimarCarta() {
+        document.getElementById('letter').classList.add('burn-effect');
+        setTimeout(() => {
+            document.getElementById('portal-carta').style.display = 'none';
+            carregarHome();
+        }, 1500);
+    }
+
+    function carregarHome() {
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById('home-user-name').innerText = usuarioAtual.nome;
+        document.getElementById('saudacao-nome').innerText = usuarioAtual.nome;
+        document.getElementById('home-avatar').src = poneyMap[usuarioAtual.poney];
+
+        inicializar();
+
+        if (!jaAbriuHoje()) {
+            setTimeout(() => abrirRecompensaDiaria(), 1000);
+        }
+    }
+
+    function toggleMenu() {
+        document.getElementById("menu-lat").classList.toggle("ativo");
+        document.getElementById("overlay").classList.toggle("ativo");
+    }
+
+    function filtrarJogos() {
+        const valor = document.getElementById("pesquisa").value.toLowerCase();
+        document.querySelectorAll(".jogo-card").forEach(j => {
+            const nome = j.getAttribute("data-nome");
+            j.style.display = nome.includes(valor) ? "block" : "none";
+        });
+    }
+
+    function filtrarCategoria(cat) {
+        document.querySelectorAll(".jogo-card").forEach(j => {
+            const c = j.getAttribute("data-cat");
+            j.style.display = (cat === "todos" || c === cat) ? "block" : "none";
+        });
+    }
+
+    function fecharRecompensa() {
+        localStorage.setItem('brinde_' + usuarioAtual.nome, new Date().toDateString());
+        document.getElementById('modal-recompensa').style.display = 'none';
+    }
+
+    function formatarData(i) {
+        let v = i.value.replace(/\D/g, "");
+        if (v.length > 2) v = v.replace(/(\d{2})(\d)/, "$1/$2");
+        if (v.length > 5) v = v.replace(/(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
+        i.value = v;
+    }
+
+    const btnNao = document.getElementById('btn-nao');
+
+    btnNao.addEventListener('mouseover', () => {
+        btnNao.style.position = 'absolute';
+        btnNao.style.left = Math.random() * 200 + 'px';
+        btnNao.style.top = Math.random() * 100 + 'px';
+    });
+
+    /* ==========================================================
+       MAPA DE EQUESTRIA
+    ========================================================== */
+
+    const lugaresEquestria = [
+        {
+            nome: "Mapa de Equestria",
+            descricao: "Visão geral do mapa de Equestria.",
+            img: "https://static.wikia.nocookie.net/mlp/images/1/14/MapaEquestriaTraduzido.png/revision/latest/scale-to-width-down/1000?cb=20140606004942&path-prefix=pt"
+        },
+        {
+            nome: "Castelo de Canterlot",
+            descricao: "Um dos lugares mais importantes de Equestria.",
+            img: "https://static.wikia.nocookie.net/mlp/images/8/82/Celestia_Harmony_S01E01.png/revision/latest/scale-to-width-down/1000?cb=20140620003157&path-prefix=pt"
+        },
+        {
+            nome: "Floresta Everfree",
+            descricao: "Uma floresta misteriosa e cheia de aventuras.",
+            img: "https://static.wikia.nocookie.net/mlp/images/d/d2/Main_six_na_Floresta_Everfree_T4E2.png/revision/latest/scale-to-width-down/1000?cb=20140606122116&path-prefix=pt"
+        },
+        {
+            nome: "Império de Cristal",
+            descricao: "O reino brilhante protegido pelo poder do amor e da amizade.",
+            img: "https://static.wikia.nocookie.net/mlp/images/8/84/Imperio_de_Cristal_T3E12.png/revision/latest/scale-to-width-down/1000?cb=20140606155938&path-prefix=pt"
+        },
+        {
+            nome: "Griffonstone",
+            descricao: "A antiga cidade dos grifos.",
+            img: "https://static.wikia.nocookie.net/mlp/images/f/f2/Griffonstone_a_%27total_dump%27_S5E8.png/revision/latest/scale-to-width-down/1000?cb=20150525104812"
+        },
+        {
+            nome: "Yakyakistan",
+            descricao: "A terra dos yaks.",
+            img: "https://static.wikia.nocookie.net/mlp/images/a/a0/Wide_view_of_Yakyakistan_as_yaks_stomp_S7E11.png/revision/latest/scale-to-width-down/1000?cb=20170618140405"
+        },
+        {
+            nome: "Casa do Discord",
+            descricao: "Um lugar estranho, mágico e imprevisível.",
+            img: "https://static.wikia.nocookie.net/mlp/images/f/fd/Discord%27s_house_S5E7.png/revision/latest/scale-to-width-down/1000?cb=20150518163141"
+        },
+        {
+            nome: "Celestia Erguendo o Sol",
+            descricao: "Princesa Celestia usando sua magia para levantar o sol.",
+            img: "https://static.wikia.nocookie.net/mlp/images/d/d7/Celestia_Raising_Sun_S01E01.png/revision/latest/scale-to-width-down/1000?cb=20140620011620&path-prefix=pt"
+        },
+        {
+            nome: "Luna Erguendo a Lua",
+            descricao: "Princesa Luna usando sua magia para levantar a lua.",
+            img: "https://static.wikia.nocookie.net/mlp/images/7/76/Luna_Raising_Moon_S01E01.png/revision/latest/scale-to-width-down/1000?cb=20140620011923&path-prefix=pt"
+        },
+        {
+            nome: "Ursa Maior e Ursa Menor",
+            descricao: "Criaturas mágicas gigantes de Equestria.",
+            img: "https://static.wikia.nocookie.net/mlp/images/8/8b/Ursa_Maior_olhando_para_Ursa_Menor_T1E06.png/revision/latest/scale-to-width-down/1000?cb=20140620012827&path-prefix=pt"
+        },
+        {
+            nome: "Canterlot High School",
+            descricao: "A escola do universo Equestria Girls.",
+            img: "https://static.wikia.nocookie.net/mlp/images/d/d4/Canterlot_High_School_overhead_exterior_EG3.png/revision/latest/scale-to-width-down/1000?cb=20150702004629"
+        },
+        {
+            nome: "Família Apple",
+            descricao: "A família da Applejack reunida.",
+            img: "https://static.wikia.nocookie.net/mlp/images/b/be/The_Apple_Family_together_S3E08.png/revision/latest/scale-to-width-down/1000?cb=20150211134723&path-prefix=pt"
+        }
+    ];
+
+    let indiceLugarAtual = 0;
+
+    function abrirMapaEquestria() {
+        indiceLugarAtual = 0;
+        mostrarLugarAtual();
+        document.getElementById("mapa-equestria-overlay").classList.add("ativo");
+    }
+
+    function fecharMapaEquestria() {
+        document.getElementById("mapa-equestria-overlay").classList.remove("ativo");
+    }
+
+    function mostrarLugarAtual() {
+        const lugar = lugaresEquestria[indiceLugarAtual];
+
+        document.getElementById("mapa-titulo").innerText = lugar.nome;
+        document.getElementById("mapa-imagem").src = lugar.img;
+        document.getElementById("mapa-descricao").innerText = lugar.descricao;
+        document.getElementById("mapa-contador").innerText =
+            "Lugar " + (indiceLugarAtual + 1) + " de " + lugaresEquestria.length;
+    }
+
+    function proximoLugar() {
+        indiceLugarAtual++;
+
+        if (indiceLugarAtual >= lugaresEquestria.length) {
+            indiceLugarAtual = 0;
+        }
+
+        mostrarLugarAtual();
+    }
+
+    function lugarAnterior() {
+        indiceLugarAtual--;
+
+        if (indiceLugarAtual < 0) {
+            indiceLugarAtual = lugaresEquestria.length - 1;
+        }
+
+        mostrarLugarAtual();
+    }
+
+    /* ==========================================================
+       RECOMPENSA DIÁRIA + ÁLBUM
+    ========================================================== */
+
+    const todasAsCartas = [
+        { id: 1, nome: "Princesa Luna", img: "princesaluna.jpeg" },
+        { id: 2, nome: "Princesa Cadence", img: "princesacadence.jpeg" },
+        { id: 3, nome: "Applejack", img: "applejack.jpeg" },
+        { id: 4, nome: "Pinkie Pie", img: "pinkiepie.jpeg" },
+        { id: 5, nome: "Rarity", img: "rarity.jpeg" },
+        { id: 6, nome: "Fluttershy", img: "fluttershy.jpeg" },
+        { id: 7, nome: "Twilight", img: "twilight.jpeg" },
+        { id: 8, nome: "Rainbow Dash", img: "rainbowdash.jpeg" },
+        { id: 9, nome: "Apple", img: "apple.png" },
+        { id: 10, nome: "Sparkle", img: "sparkle.jpg" },
+        { id: 11, nome: "Princess", img: "princess.jpg" },
+        { id: 12, nome: "Lu", img: "lu.jpg" },
+        { id: 13, nome: "Cada", img: "cada.jpg" },
+        { id: 14, nome: "Pie", img: "pie.jpg" },
+        { id: 15, nome: "Rar", img: "rar.jpg" },
+        { id: 16, nome: "Rain", img: "rain.jpg" },
+        { id: 17, nome: "Baby Flurry", img: "babyflur.jpeg" },
+        { id: 18, nome: "Rarity Baby", img: "raritybaby.jpg" },
+        { id: 19, nome: "Pinkie Baby", img: "pinkiebaby.jpg" },
+        { id: 20, nome: "Apple Baby", img: "applebaby.jpg" },
+        { id: 21, nome: "Rain Baby", img: "rainbaby.jpg" },
+        { id: 22, nome: "Twi Baby", img: "twibaby.jpg" }
+    ];
+
+    const rewardOverlay = document.getElementById('daily-reward-overlay');
+    const container = document.getElementById('main-container');
+    const pacote = document.getElementById('pacote');
+    const displayCartas = document.getElementById('display-cartas');
+    const albumGrid = document.getElementById('album-grid');
+    const avisoDiario = document.getElementById('aviso-diario');
+    const telaBau = document.getElementById('tela-bau');
+    const chestBox = document.getElementById('chest-box');
+
+    const modal = document.getElementById('carta-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalNome = document.getElementById('modal-nome');
+
+    let cliques = 0;
+    let colecaoUsuario = JSON.parse(localStorage.getItem('mlp_colecao')) || [];
+
+    function abrirRecompensaDiaria() {
+        inicializar();
+        rewardOverlay.classList.add('ativo');
+    }
+
+    function fecharRecompensaDiaria() {
+        rewardOverlay.classList.remove('ativo');
+        fecharModal();
+    }
+
+    function jaAbriuHoje() {
+        const hoje = new Date().toDateString();
+        return hoje === localStorage.getItem('mlp_ultimo_pacote');
+    }
+
+    function inicializar() {
+        renderizarAlbum();
+
+        container.classList.remove('stage-1', 'stage-2', 'stage-3', 'stage-4', 'show-reward');
+
+        if (jaAbriuHoje()) {
+            telaBau.style.display = 'none';
+            pacote.style.display = 'none';
+            avisoDiario.style.display = 'inline-block';
+        } else {
+            telaBau.style.display = 'flex';
+            pacote.style.display = 'none';
+            avisoDiario.style.display = 'none';
+            chestBox.classList.remove('open-chest');
+            document.getElementById('botoes-recompensa').style.pointerEvents = 'auto';
+            document.getElementById('botoes-recompensa').style.visibility = 'visible';
+            cliques = 0;
+        }
+
+        mudarAba('pacote');
+    }
+
+    function mudarAba(aba) {
+        document.getElementById('btn-tab-pacote').classList.remove('active');
+        document.getElementById('btn-tab-album').classList.remove('active');
+        document.getElementById('panel-pacote').classList.remove('active-panel');
+        document.getElementById('panel-album').classList.remove('active-panel');
+
+        if (aba === 'pacote') {
+            document.getElementById('btn-tab-pacote').classList.add('active');
+            document.getElementById('panel-pacote').classList.add('active-panel');
+        } else {
+            document.getElementById('btn-tab-album').classList.add('active');
+            document.getElementById('panel-album').classList.add('active-panel');
+        }
+    }
+
+    function aceitarRecompensa() {
+        chestBox.classList.add('open-chest');
+        document.getElementById('botoes-recompensa').style.pointerEvents = 'none';
+
+        setTimeout(() => {
+            telaBau.style.display = 'none';
+            pacote.style.display = 'block';
+            pacote.classList.add('popup-pack');
+        }, 600);
+    }
+
+    function recusarRecompensa() {
+        mudarAba('album');
+    }
+
+    function resetarTeste() {
+        localStorage.removeItem('mlp_ultimo_pacote');
+        cliques = 0;
+        container.classList.remove('stage-1', 'stage-2', 'stage-3', 'stage-4', 'show-reward');
+        chestBox.classList.remove('open-chest');
+        document.getElementById('botoes-recompensa').style.pointerEvents = 'auto';
+        document.getElementById('botoes-recompensa').style.visibility = 'visible';
+        inicializar();
+        mudarAba('pacote');
+        alert("Pronto! Sistema reiniciado para novos testes.");
+    }
+
+    function renderizarAlbum() {
+        albumGrid.innerHTML = '';
+        let obtidas = 0;
+
+        todasAsCartas.forEach(carta => {
+            const possui = colecaoUsuario.includes(carta.id);
+            if (possui) obtidas++;
+
+            const div = document.createElement('div');
+            div.className = `card ${possui ? '' : 'locked'}`;
+            div.innerHTML = `<img src="${carta.img}" onerror="this.src='https://via.placeholder.com/110x155?text=?';">`;
+
+            if (possui) {
+                div.addEventListener('click', () => abrirModal(carta));
+            }
+
+            albumGrid.appendChild(div);
+        });
+
+        document.getElementById('total-obtidas').innerText = obtidas;
+    }
+
+    function abrirModal(carta) {
+        modalImg.src = carta.img;
+        modalNome.innerText = carta.nome;
+        modal.classList.add('show');
+    }
+
+    function fecharModal() {
+        modal.classList.remove('show');
+    }
+
+    pacote.addEventListener('click', () => {
+        if (cliques >= 4) return;
+
+        cliques++;
+        container.classList.remove('stage-1', 'stage-2', 'stage-3', 'stage-4');
+
+        if (cliques === 1) container.classList.add('stage-1');
+        else if (cliques === 2) container.classList.add('stage-2');
+        else if (cliques === 3) container.classList.add('stage-3');
+        else if (cliques === 4) {
+            container.classList.add('stage-4');
+
+            displayCartas.innerHTML = '';
+
+            for (let i = 0; i < 5; i++) {
+                const indiceAleatorio = Math.floor(Math.random() * todasAsCartas.length);
+                const carta = todasAsCartas[indiceAleatorio];
+                const jaTinha = colecaoUsuario.includes(carta.id);
+
+                if (!jaTinha) {
+                    colecaoUsuario.push(carta.id);
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'card-container-wrapper';
+
+                if (jaTinha) {
+                    const tag = document.createElement('span');
+                    tag.className = 'repeat-tag';
+                    tag.innerText = 'Repetida';
+                    wrapper.appendChild(tag);
+                }
+
+                const divCard = document.createElement('div');
+                divCard.className = 'card reveal-card';
+                divCard.style.animationDelay = (i * 0.2) + "s";
+                divCard.innerHTML = `<img src="${carta.img}" onerror="this.src='https://via.placeholder.com/140x195?text=Pony'">`;
+
+                wrapper.appendChild(divCard);
+                displayCartas.appendChild(wrapper);
+            }
+
+            localStorage.setItem('mlp_colecao', JSON.stringify(colecaoUsuario));
+            localStorage.setItem('mlp_ultimo_pacote', new Date().toDateString());
+
+            setTimeout(() => {
+                pacote.style.display = 'none';
+                container.classList.add('show-reward');
+                renderizarAlbum();
+            }, 800);
+        }
+    });
+
+    function irParaOAlbum() {
+        container.classList.remove('show-reward');
+        avisoDiario.style.display = 'inline-block';
+        mudarAba('album');
+    }
+
+    /* ==========================================================
+       BOUTIQUE DA RARITY
+    ========================================================== */
+
+    let boutiqueSelectedPony = "";
+    const boutiqueAllClothes = ["Vestido Gala", "Estilo Roxo", "Look Diamante", "Moda Luxo"];
+
+    function abrirBoutiqueRarity() {
+        document.getElementById('boutique-rarity-overlay').classList.add('ativo');
+        boutiqueShowScreen('screen-cover');
+    }
+
+    function fecharBoutiqueRarity() {
+        document.getElementById('boutique-rarity-overlay').classList.remove('ativo');
+    }
+
+    function boutiqueShowScreen(id) {
+        document.querySelectorAll("#boutique-rarity-app .screen").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+    }
+
+    function boutiqueSelectPony(name) {
+        boutiqueSelectedPony = name;
+
+        localStorage.setItem("boutique_ponei_escolhido", name);
+
+        window.location.href = "boutique.html?pony=" + encodeURIComponent(name) + "&v=80";
+    }
+
+   function boutiqueRenderClothes() {
+        const containerBoutique = document.getElementById("clothes");
+        containerBoutique.innerHTML = "";
+
+        boutiqueAllClothes.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "cloth";
+            div.innerText = item;
+            div.onclick = () => boutiqueDress(item);
+            containerBoutique.appendChild(div);
+        });
+    }
+
+    function boutiqueDress(item) {
+        document.getElementById("ponyDisplay").innerText = boutiqueSelectedPony + "\n👗\n" + item;
+    }
+
+    function abrirQuiz() {
+        window.location.href = "quiz.html";
+    }
+
+    function abrirPonyColor() {
+        window.location.href = "ponycolor.html";
+    }
+
+    /*
+       Quando a Boutique ou outros jogos voltarem com index.html?home=1,
+       o index abre direto na Home, sem cair no cadastro.
+    */
+    function abrirHomeAoVoltarDosJogos() {
+        const parametros = new URLSearchParams(window.location.search);
+
+        const deveAbrirHome =
+            parametros.get("home") === "1" ||
+            localStorage.getItem("ponytopia_abrir_home") === "sim" ||
+            sessionStorage.getItem("ponytopia_abrir_home") === "sim";
+
+        if (!deveAbrirHome) {
+            return;
+        }
+
+        localStorage.removeItem("ponytopia_abrir_home");
+        sessionStorage.removeItem("ponytopia_abrir_home");
+
+        const usuarioSalvo = localStorage.getItem("ponytopia_usuario_atual");
+
+        if (usuarioSalvo) {
+            usuarioAtual = JSON.parse(usuarioSalvo);
+        } else {
+            usuarioAtual = {
+                nome: "Visitante",
+                poney: "Rarity"
+            };
+
+            localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(usuarioAtual));
+        }
+
+        document.getElementById('tela-cadastro').style.display = 'none';
+        document.getElementById('tela-selecao').style.display = 'none';
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('portal-carta').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+
+        carregarHome();
+
+        if (parametros.get("abrirBoutique") === "1") {
+            setTimeout(() => abrirBoutiqueRarity(), 300);
+        }
+
+        window.history.replaceState({}, document.title, "index.html");
+    }
+
+    abrirHomeAoVoltarDosJogos();
+
+</script>
+
+</body>
+</html>

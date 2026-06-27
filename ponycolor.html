@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONYCOLOR - Jogo de Pintura</title>
+
+    <style>
+        body {
+            text-align: center;
+            background-image: url('https://www.chromethemer.com/download/hd-wallpapers/my-little-pony-3840x2160.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #ff4081;
+            font-weight: bold;
+            font-size: 45px;
+            margin: 10px 0 20px 0;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+        }
+
+        #container-jogo {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 4px solid #ff4081;
+            max-width: 800px;
+        }
+
+        .controles {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .botao-home {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            background: #6a1b9a;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cor-seletor {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .galeria-titulo {
+            color: #ff4081;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .galeria {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .galeria-item {
+            width: 100px;
+            height: 80px;
+            object-fit: contain;
+            background: white;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .galeria-item:hover {
+            transform: scale(1.15) rotate(3deg);
+            border-color: #ff4081;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+        }
+
+        #area-canvas {
+            position: relative;
+            width: 600px;
+            height: 450px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            border: 2px solid #ccc;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            cursor: crosshair;
+        }
+
+        #desenho-guia {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            object-fit: contain;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding-top: 70px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            #container-jogo {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                padding: 12px;
+            }
+
+            #area-canvas {
+                width: 100%;
+                max-width: 600px;
+                height: 350px;
+            }
+
+            canvas {
+                width: 100%;
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="botao-home" onclick="voltarParaHome()">
+        ⬅ Voltar para Home
+    </button>
+
+    <h1>PONYCOLOR</h1>
+
+    <div id="container-jogo">
+
+        <div class="controles">
+            <div class="cor-seletor" style="background: #ff4081;" onclick="mudarCor('#ff4081')"></div>
+            <div class="cor-seletor" style="background: #7b1fa2;" onclick="mudarCor('#7b1fa2')"></div>
+            <div class="cor-seletor" style="background: #00e5ff;" onclick="mudarCor('#00e5ff')"></div>
+            <div class="cor-seletor" style="background: #ffeb3b;" onclick="mudarCor('#ffeb3b')"></div>
+            <div class="cor-seletor" style="background: #4caf50;" onclick="mudarCor('#4caf50')"></div>
+
+            <input type="color" id="colorPicker" oninput="mudarCor(this.value)"
+                style="width:35px; height:35px; cursor:pointer">
+
+            <button style="background: #333; color: white;" onclick="usarBorracha()">
+                Borracha 🧽
+            </button>
+
+            <button style="background: #eee; border: 1px solid #ccc;" onclick="limpar()">
+                Limpar
+            </button>
+
+            <span style="font-weight:bold; color: #555;">Tamanho:</span>
+
+            <input type="range" id="tamanho-pincel" min="2" max="30" value="8">
+        </div>
+
+        <h3 class="galeria-titulo">Escolha seu desenho:</h3>
+
+        <div class="galeria">
+            <img class="galeria-item"
+                src="https://www.desenhosecolorir.com.br/wp-content/uploads/2023/12/my-little-pony-para-colorir-capa.jpg"
+                onclick="trocarDesenho(this.src)" alt="Desenho 1">
+
+            <img class="galeria-item"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTa5uHoGmFuwZuJPtQR5cxsTyvqIydW5CcrQmC1lFpqq742ri50CSLXjiN2&s=10"
+                onclick="trocarDesenho(this.src)" alt="Desenho 2">
+
+            <img class="galeria-item" src="https://i.pinimg.com/474x/eb/2e/d5/eb2ed55bfdb5f840ebbfc5513bb73c5d.jpg"
+                onclick="trocarDesenho(this.src)" alt="Desenho 3">
+        </div>
+
+        <div id="area-canvas">
+            <canvas id="tela" width="600" height="450"></canvas>
+
+            <img id="desenho-guia"
+                src="https://www.desenhosecolorir.com.br/wp-content/uploads/2023/12/my-little-pony-para-colorir-capa.jpg"
+                alt="Desenho para colorir">
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('tela');
+        const ctx = canvas.getContext('2d');
+        const inputTamanho = document.getElementById('tamanho-pincel');
+        const imagemGuia = document.getElementById('desenho-guia');
+
+        let pintando = false;
+        let corAtual = '#ff4081';
+
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+     function voltarParaHome() {
+            localStorage.setItem("ponytopia_abrir_home", "sim");
+            sessionStorage.setItem("ponytopia_abrir_home", "sim");
+
+            window.location.href = "index.html?home=1";
+        }
+
+        function mudarCor(novaCor) {
+            corAtual = novaCor;
+            ctx.globalCompositeOperation = 'source-over';
+        }
+
+        function usarBorracha() {
+            ctx.globalCompositeOperation = 'destination-out';
+        }
+
+        function limpar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function trocarDesenho(novaUrl) {
+            imagemGuia.src = novaUrl;
+            limpar();
+        }
+
+        function pegarPosicao(e) {
+            const rect = canvas.getBoundingClientRect();
+
+            let clientX;
+            let clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const escalaX = canvas.width / rect.width;
+            const escalaY = canvas.height / rect.height;
+
+            return {
+                x: (clientX - rect.left) * escalaX,
+                y: (clientY - rect.top) * escalaY
+            };
+        }
+
+        function iniciarDesenho(e) {
+            pintando = true;
+            ctx.beginPath();
+
+            const posicao = pegarPosicao(e);
+
+            ctx.moveTo(posicao.x, posicao.y);
+        }
+
+        function desenhar(e) {
+            if (!pintando) return;
+
+            e.preventDefault();
+
+            const posicao = pegarPosicao(e);
+
+            ctx.lineTo(posicao.x, posicao.y);
+            ctx.strokeStyle = corAtual;
+            ctx.lineWidth = inputTamanho.value;
+            ctx.stroke();
+        }
+
+        function pararDesenho() {
+            pintando = false;
+            ctx.closePath();
+        }
+
+        canvas.addEventListener('mousedown', iniciarDesenho);
+        canvas.addEventListener('mousemove', desenhar);
+        window.addEventListener('mouseup', pararDesenho);
+
+        canvas.addEventListener('touchstart', iniciarDesenho);
+        canvas.addEventListener('touchmove', desenhar);
+        window.addEventListener('touchend', pararDesenho);
+    </script>
+
+</body>
+
+</html>

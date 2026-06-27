@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Boutique da Rarity</title>
+
+    <style>
+        :root {
+            --roxo-escuro-capa: #0c0418;
+            --lilas-brilho: #cbb4ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle, #251242 0%, #050208 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .botao-home {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 9999;
+            background: #6a1b9a;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .screen-centro {
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-viewport {
+            width: 95%;
+            max-width: 550px;
+            position: relative;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.95);
+            border-radius: 25px;
+            overflow: hidden;
+            line-height: 0;
+            background: var(--roxo-escuro-capa);
+            text-align: center;
+        }
+
+        img.bg-screen {
+            width: 100%;
+            display: block;
+        }
+
+        #botao-play-capa {
+            position: absolute;
+            top: 78%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 82px;
+            height: 82px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            background: rgba(25, 10, 55, 0.82);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.45);
+        }
+
+        #botao-play-capa::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-left: 32px solid white;
+        }
+
+        #botao-play-capa:hover {
+            transform: translate(-50%, -50%) scale(1.08);
+            background: rgba(106, 27, 154, 0.95);
+        }
+
+        #screen-dress.active {
+            display: block;
+        }
+
+        #screen-dress {
+            min-height: 100vh;
+            background: radial-gradient(circle, #f8d6ff 0%, #b388ff 45%, #210033 100%);
+            padding-bottom: 40px;
+        }
+
+        .titulo {
+            text-align: center;
+            padding-top: 80px;
+            margin-bottom: 10px;
+        }
+
+        .titulo h1 {
+            margin: 0;
+            font-size: 42px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #7b1fa2;
+        }
+
+        .titulo p {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #f3d5ff;
+        }
+
+        .jogo {
+            width: 95%;
+            max-width: 1100px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 330px;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        .palco {
+            position: relative;
+            min-height: 620px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.18));
+            border: 4px solid white;
+            border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .palco::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55), transparent 16%),
+                radial-gradient(circle at 80% 15%, rgba(255, 255, 255, 0.45), transparent 14%),
+                radial-gradient(circle at 70% 75%, rgba(255, 255, 255, 0.35), transparent 18%);
+            pointer-events: none;
+        }
+
+        .espelho {
+            position: absolute;
+            width: 360px;
+            height: 500px;
+            left: 50%;
+            top: 55%;
+            transform: translate(-50%, -50%);
+            border-radius: 50% 50% 35% 35%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.12));
+            border: 8px solid #f3d5ff;
+            box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.55), 0 0 30px rgba(255, 255, 255, 0.35);
+        }
+
+        .pony {
+            --pony-body: #f7f3ff;
+            --pony-border: #cbb4ff;
+            --mane1: #4a0072;
+            --mane2: #9c27b0;
+            --mane3: #e040fb;
+
+            position: absolute;
+            width: 360px;
+            height: 420px;
+            left: 50%;
+            bottom: 55px;
+            transform: translateX(-50%);
+        }
+
+        .body {
+            position: absolute;
+            width: 210px;
+            height: 120px;
+            left: 80px;
+            top: 190px;
+            background: var(--pony-body);
+            border: 4px solid var(--pony-border);
+            border-radius: 60% 50% 55% 45%;
+            z-index: 3;
+        }
+
+        .head {
+            position: absolute;
+            width: 125px;
+            height: 115px;
+            left: 190px;
+            top: 100px;
+            background: var(--pony-body);
+            border: 4px solid var(--pony-border);
+            border-radius: 55% 50% 50% 45%;
+            z-index: 5;
+        }
+
+        .snout {
+            position: absolute;
+            width: 55px;
+            height: 42px;
+            right: -20px;
+            top: 48px;
+            background: var(--pony-body);
+            border: 4px solid var(--pony-border);
+            border-left: none;
+            border-radius: 50%;
+            z-index: 4;
+        }
+
+        .ear {
+            position: absolute;
+            width: 38px;
+            height: 55px;
+            left: 215px;
+            top: 64px;
+            background: var(--pony-body);
+            border: 4px solid var(--pony-border);
+            border-radius: 80% 10% 80% 10%;
+            transform: rotate(-18deg);
+            z-index: 4;
+        }
+
+        .horn {
+            position: absolute;
+            left: 245px;
+            top: 50px;
+            width: 24px;
+            height: 70px;
+            background: linear-gradient(90deg, var(--pony-body), var(--pony-border));
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            border-radius: 50%;
+            z-index: 3;
+            transform: rotate(10deg);
+        }
+
+        .eye {
+            position: absolute;
+            width: 22px;
+            height: 32px;
+            right: 20px;
+            top: 40px;
+            background: #1f1035;
+            border-radius: 50%;
+            z-index: 8;
+        }
+
+        .eye::after {
+            content: "";
+            position: absolute;
+            width: 7px;
+            height: 9px;
+            top: 6px;
+            left: 5px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .mane {
+            position: absolute;
+            width: 105px;
+            height: 160px;
+            left: 150px;
+            top: 65px;
+            background: linear-gradient(160deg, var(--mane1), var(--mane2), var(--mane3));
+            border-radius: 70% 20% 80% 30%;
+            z-index: 6;
+            transform: rotate(18deg);
+            box-shadow: inset -10px -10px 0 rgba(255, 255, 255, 0.18);
+        }
+
+        .mane::after {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 110px;
+            left: 25px;
+            top: 65px;
+            background: linear-gradient(160deg, var(--mane2), var(--mane3));
+            border-radius: 50%;
+            transform: rotate(-20deg);
+        }
+
+        .tail {
+            position: absolute;
+            width: 130px;
+            height: 150px;
+            left: 5px;
+            top: 175px;
+            background: linear-gradient(160deg, var(--mane1), var(--mane2), var(--mane3));
+            border-radius: 70% 20% 80% 30%;
+            z-index: 2;
+            transform: rotate(-25deg);
+            box-shadow: inset -12px -10px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        .leg {
+            position: absolute;
+            width: 35px;
+            height: 125px;
+            background: var(--pony-body);
+            border: 4px solid var(--pony-border);
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .leg1 {
+            left: 105px;
+            top: 275px;
+        }
+
+        .leg2 {
+            left: 155px;
+            top: 275px;
+        }
+
+        .leg3 {
+            left: 225px;
+            top: 275px;
+        }
+
+        .leg4 {
+            left: 270px;
+            top: 275px;
+        }
+
+        .cutie {
+            position: absolute;
+            left: 125px;
+            top: 220px;
+            z-index: 8;
+            font-size: 30px;
+        }
+
+        .dress {
+            position: absolute;
+            left: 75px;
+            top: 205px;
+            width: 210px;
+            height: 125px;
+            z-index: 7;
+            display: none;
+        }
+
+        .dress.gala {
+            display: block;
+            background: linear-gradient(135deg, #7b1fa2, #e040fb);
+            clip-path: polygon(15% 10%, 88% 10%, 100% 100%, 0% 100%);
+            border-radius: 30px 30px 20px 20px;
+            box-shadow: 0 8px 0 rgba(255, 255, 255, 0.25) inset;
+        }
+
+        .dress.royal {
+            display: block;
+            background: linear-gradient(135deg, #ffffff, #cbb4ff, #7b1fa2);
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+            border-radius: 30px;
+            border: 3px solid #fff;
+        }
+
+        .dress.fashion {
+            display: block;
+            background: linear-gradient(135deg, #ff4081, #ff80ab, #f8bbd0);
+            clip-path: polygon(18% 5%, 85% 5%, 95% 100%, 0% 100%);
+            border-radius: 40px 20px 35px 20px;
+        }
+
+        .dress.night {
+            display: block;
+            background: linear-gradient(135deg, #0d0221, #3f0071, #7b1fa2);
+            clip-path: polygon(10% 10%, 90% 0%, 100% 100%, 0% 100%);
+            border-radius: 25px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .necklace {
+            position: absolute;
+            left: 220px;
+            top: 197px;
+            z-index: 9;
+            font-size: 34px;
+            display: none;
+        }
+
+        .necklace.on {
+            display: block;
+        }
+
+        .tiara {
+            position: absolute;
+            left: 224px;
+            top: 63px;
+            z-index: 10;
+            font-size: 38px;
+            display: none;
+            transform: rotate(8deg);
+        }
+
+        .tiara.on {
+            display: block;
+        }
+
+        .glasses {
+            position: absolute;
+            left: 238px;
+            top: 135px;
+            z-index: 11;
+            font-size: 34px;
+            display: none;
+        }
+
+        .glasses.on {
+            display: block;
+        }
+
+        .shoe {
+            position: absolute;
+            z-index: 10;
+            font-size: 24px;
+            display: none;
+        }
+
+        .shoe.on {
+            display: block;
+        }
+
+        .shoe1 {
+            left: 107px;
+            top: 382px;
+        }
+
+        .shoe2 {
+            left: 157px;
+            top: 382px;
+        }
+
+        .shoe3 {
+            left: 227px;
+            top: 382px;
+        }
+
+        .shoe4 {
+            left: 272px;
+            top: 382px;
+        }
+
+        .painel {
+            background: rgba(255, 255, 255, 0.95);
+            color: #4a148c;
+            border-radius: 30px;
+            border: 4px solid #f3d5ff;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+        }
+
+        .painel h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #6a1b9a;
+        }
+
+        .grupo {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #e1bee7;
+        }
+
+        .grupo h3 {
+            margin: 0 0 10px 0;
+            color: #8e24aa;
+        }
+
+        .opcoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .opcao {
+            border: none;
+            padding: 12px;
+            border-radius: 15px;
+            background: #f3d5ff;
+            color: #4a148c;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .opcao:hover {
+            transform: scale(1.05);
+            background: #e1bee7;
+        }
+
+        .botoes-finais {
+            display: grid;
+            gap: 10px;
+        }
+
+        .botao-final {
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(45deg, #ec407a, #ab47bc);
+        }
+
+        .botao-limpar {
+            background: #555;
+        }
+
+        .botao-capa {
+            background: #6a1b9a;
+        }
+
+        .mensagem {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #6a1b9a;
+            min-height: 22px;
+        }
+
+        @media (max-width: 900px) {
+            .jogo {
+                grid-template-columns: 1fr;
+            }
+
+            .palco {
+                min-height: 560px;
+            }
+
+            .pony {
+                transform: translateX(-50%) scale(0.88);
+                transform-origin: bottom center;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .titulo h1 {
+                font-size: 30px;
+            }
+
+            .palco {
+                min-height: 520px;
+            }
+
+            .pony {
+                transform: translateX(-50%) scale(0.78);
+            }
+
+            .espelho {
+                width: 290px;
+                height: 430px;
+            }
+
+            .opcoes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="botao-home" onclick="voltarParaHome()">
+        ⬅ Voltar para Home
+    </button>
+
+    <!-- TELA 1: CAPA COM A NOVA IMAGEM -->
+    <div id="screen-cover" class="screen screen-centro active">
+        <div class="app-viewport">
+            <img src="https://static.wikia.nocookie.net/mlp/images/4/48/Comic_issue_5_cover_B.jpg/revision/latest/scale-to-width-down/250?cb=20130427095930"
+                class="bg-screen" alt="Capa da Boutique da Rarity">
+
+            <button id="botao-play-capa" onclick="iniciarJogoVestir()" title="Entrar na Boutique">
+            </button>
+        </div>
+    </div>
+
+    <!-- TELA 2: JOGO DE VESTIR DIRETO -->
+    <div id="screen-dress" class="screen">
+
+        <div class="titulo">
+            <h1>Boutique da Rarity</h1>
+            <p>Vista a Rarity com roupas, acessórios e muito brilho ✨</p>
+        </div>
+
+        <div class="jogo">
+
+            <div class="palco">
+                <div class="espelho"></div>
+
+                <div class="pony" id="pony">
+
+                    <div class="horn"></div>
+                    <div class="ear"></div>
+                    <div class="tail"></div>
+
+                    <div class="leg leg1"></div>
+                    <div class="leg leg2"></div>
+                    <div class="leg leg3"></div>
+                    <div class="leg leg4"></div>
+
+                    <div class="body"></div>
+
+                    <div class="head">
+                        <div class="snout"></div>
+                        <div class="eye"></div>
+                    </div>
+
+                    <div class="mane"></div>
+                    <div class="cutie">💎</div>
+
+                    <div id="dress" class="dress"></div>
+
+                    <div id="necklace" class="necklace">💎</div>
+                    <div id="tiara" class="tiara">👑</div>
+                    <div id="glasses" class="glasses">🕶️</div>
+
+                    <div id="shoe1" class="shoe shoe1">👠</div>
+                    <div id="shoe2" class="shoe shoe2">👠</div>
+                    <div id="shoe3" class="shoe shoe3">👠</div>
+                    <div id="shoe4" class="shoe shoe4">👠</div>
+
+                </div>
+            </div>
+
+            <div class="painel">
+                <h2>Guarda-roupa da Rarity</h2>
+
+                <div class="grupo">
+                    <h3>Vestido</h3>
+
+                    <div class="opcoes">
+                        <button class="opcao" onclick="escolherVestido('')">Sem vestido</button>
+                        <button class="opcao" onclick="escolherVestido('gala')">Gala Roxo</button>
+                        <button class="opcao" onclick="escolherVestido('royal')">Real</button>
+                        <button class="opcao" onclick="escolherVestido('fashion')">Fashion Rosa</button>
+                        <button class="opcao" onclick="escolherVestido('night')">Noite Estrelada</button>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <h3>Acessórios</h3>
+
+                    <div class="opcoes">
+                        <button class="opcao" onclick="alternarAcessorio('tiara')">Coroa</button>
+                        <button class="opcao" onclick="alternarAcessorio('necklace')">Colar</button>
+                        <button class="opcao" onclick="alternarAcessorio('glasses')">Óculos</button>
+                        <button class="opcao" onclick="alternarSapatos()">Sapatos</button>
+                    </div>
+                </div>
+
+                <div class="botoes-finais">
+                    <button class="botao-final" onclick="salvarLook()">Salvar Look</button>
+                    <button class="botao-final botao-limpar" onclick="limparLook(true)">Limpar Tudo</button>
+                    <button class="botao-final botao-capa" onclick="showScreen('screen-cover')">Voltar para
+                        Capa</button>
+                </div>
+
+                <div class="mensagem" id="mensagem"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function voltarParaHome() {
+            localStorage.setItem("ponytopia_abrir_home", "sim");
+            sessionStorage.setItem("ponytopia_abrir_home", "sim");
+
+            if (!localStorage.getItem("ponytopia_usuario_atual")) {
+                const visitante = {
+                    nome: "Visitante",
+                    poney: "Rarity"
+                };
+
+                localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(visitante));
+            }
+
+            window.location.href = "index.html?home=1";
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll(".screen").forEach(screen => {
+                screen.classList.remove("active");
+            });
+
+            document.getElementById(id).classList.add("active");
+
+            window.scrollTo(0, 0);
+        }
+
+        function iniciarJogoVestir() {
+            carregarLookSalvo();
+            showScreen("screen-dress");
+        }
+
+        function escolherVestido(tipo) {
+            const vestido = document.getElementById("dress");
+
+            vestido.className = "dress";
+
+            if (tipo !== "") {
+                vestido.classList.add(tipo);
+            }
+
+            document.getElementById("mensagem").innerText =
+                "Vestido escolhido: " + (tipo || "sem vestido");
+        }
+
+        function alternarAcessorio(id) {
+            const item = document.getElementById(id);
+
+            item.classList.toggle("on");
+
+            document.getElementById("mensagem").innerText =
+                "Acessório alterado!";
+        }
+
+        function alternarSapatos() {
+            document.getElementById("shoe1").classList.toggle("on");
+            document.getElementById("shoe2").classList.toggle("on");
+            document.getElementById("shoe3").classList.toggle("on");
+            document.getElementById("shoe4").classList.toggle("on");
+
+            document.getElementById("mensagem").innerText =
+                "Sapatos alterados!";
+        }
+
+        function limparLook(mostrarMensagem) {
+            document.getElementById("dress").className = "dress";
+
+            document.getElementById("necklace").classList.remove("on");
+            document.getElementById("tiara").classList.remove("on");
+            document.getElementById("glasses").classList.remove("on");
+
+            document.getElementById("shoe1").classList.remove("on");
+            document.getElementById("shoe2").classList.remove("on");
+            document.getElementById("shoe3").classList.remove("on");
+            document.getElementById("shoe4").classList.remove("on");
+
+            if (mostrarMensagem) {
+                document.getElementById("mensagem").innerText = "Look limpo!";
+            } else {
+                document.getElementById("mensagem").innerText = "";
+            }
+        }
+
+        function salvarLook() {
+            const look = {
+                vestido: document.getElementById("dress").className,
+                tiara: document.getElementById("tiara").classList.contains("on"),
+                colar: document.getElementById("necklace").classList.contains("on"),
+                oculos: document.getElementById("glasses").classList.contains("on"),
+                sapatos: document.getElementById("shoe1").classList.contains("on")
+            };
+
+            localStorage.setItem("look_salvo_rarity", JSON.stringify(look));
+
+            document.getElementById("mensagem").innerText =
+                "Look da Rarity salvo com sucesso! ✨";
+        }
+
+        function carregarLookSalvo() {
+            const salvo = localStorage.getItem("look_salvo_rarity");
+
+            if (!salvo) {
+                return;
+            }
+
+            const look = JSON.parse(salvo);
+
+            document.getElementById("dress").className = look.vestido || "dress";
+
+            if (look.tiara) {
+                document.getElementById("tiara").classList.add("on");
+            }
+
+            if (look.colar) {
+                document.getElementById("necklace").classList.add("on");
+            }
+
+            if (look.oculos) {
+                document.getElementById("glasses").classList.add("on");
+            }
+
+            if (look.sapatos) {
+                document.getElementById("shoe1").classList.add("on");
+                document.getElementById("shoe2").classList.add("on");
+                document.getElementById("shoe3").classList.add("on");
+                document.getElementById("shoe4").classList.add("on");
+            }
+
+            document.getElementById("mensagem").innerText =
+                "Look salvo da Rarity carregado!";
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLP Quiz - Personalidade</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+      background: linear-gradient(135deg, rgba(252, 228, 236, 0.4) 0%, rgba(243, 229, 245, 0.4) 50%, rgba(224, 247, 250, 0.4) 100%), url('https://wallpapers.com/images/hd/desktop-my-little-pony-1920-x-1080-rqscdnok7aji7n5c.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #quiz-box {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px 30px;
+      border-radius: 30px;
+      max-width: 600px;
+      width: 100%;
+      margin: 20px auto;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+      border: 3px solid #ba68c8;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      color: #6a1b9a;
+      min-height: 70px;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      font-weight: 900;
+      transition: opacity 0.3s ease;
+    }
+
+    .barra {
+      position: relative;
+      height: 55px;
+      background: linear-gradient(to right, #ff4081, #f3e5f5, #00e5ff);
+      border-radius: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 25px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 900;
+      color: #4a148c;
+      text-transform: uppercase;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+    }
+
+    #seletor {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 35px;
+      height: 35px;
+      background: #7b1fa2;
+      border: 4px solid white;
+      border-radius: 50%;
+      transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+    }
+
+    button {
+      margin-top: 40px;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(45deg, #ec407a, #ab47bc);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 6px 20px rgba(236, 64, 122, 0.4);
+      text-transform: uppercase;
+    }
+
+    button:disabled {
+      background: #d1d1d1;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.7;
+    }
+
+    .botao-home {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 9999;
+      background: #6a1b9a;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 20px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 0;
+      font-size: 14px;
+      box-shadow: none;
+    }
+
+    .botao-home:hover {
+      transform: scale(1.05);
+    }
+
+    .progresso {
+      margin-top: 25px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #8e24aa;
+    }
+
+    .pony-img {
+      width: 240px;
+      height: 240px;
+      object-fit: contain;
+      margin: 20px auto;
+      display: block;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding-top: 70px;
+        align-items: flex-start;
+      }
+
+      #quiz-box {
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .barra {
+        padding: 0 15px;
+      }
+
+      .label {
+        font-size: 12px;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 13px 25px;
+      }
+
+      .botao-home {
+        font-size: 13px;
+        padding: 10px 14px;
+      }
+
+      .pony-img {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="botao-home" onclick="voltarParaHome()">
+    ⬅ Voltar para Home
+  </button>
+
+  <div id="quiz-box">
+    <div id="conteudo-quiz">
+      <h2 id="pergunta"></h2>
+
+      <div class="barra" onclick="selecionar(event)" ontouchstart="selecionar(event)">
+        <div id="seletor"></div>
+        <span class="label">Não</span>
+        <span class="label">Neutro</span>
+        <span class="label">Sim</span>
+      </div>
+
+      <button id="btn-confirmar" onclick="confirmar()" disabled>
+        Confirmar Resposta
+      </button>
+
+      <div class="progresso" id="progresso"></div>
+    </div>
+  </div>
+
+  <script>
+    const infoPonies = {
+      twilight: {
+        nome: "Twilight Sparkle",
+        img: "https://www.nicepng.com/png/full/156-1567083_twilight-sparkle-my-little-pony-twilight-sparkle-unicorn.png",
+        desc: "Você é movido pela lógica, organização e adora aprender coisas novas!"
+      },
+
+      rainbow: {
+        nome: "Rainbow Dash",
+        img: "https://www.nicepng.com/png/full/218-2186731_rainbow-dash-png-hd-my-little-pony-the.png",
+        desc: "Você é corajoso, competitivo e extremamente leal aos seus amigos."
+      },
+
+      pinkie: {
+        nome: "Pinkie Pie",
+        img: "https://www.pngarts.com/files/3/Pinkie-Pie-PNG-Transparent-Image.png",
+        desc: "Sua missão é espalhar alegria! Você é a alma da festa e muito otimista."
+      },
+
+      fluttershy: {
+        nome: "Fluttershy",
+        img: "https://www.pngarts.com/files/3/Fluttershy-Transparent.png",
+        desc: "Você possui uma alma gentil, calma e uma conexão única com a natureza."
+      },
+
+      rarity: {
+        nome: "Rarity",
+        img: "https://www.pngkey.com/png/full/266-2663386_rarity-images-rarity-hd-wallpaper-and-background-photos.png",
+        desc: "Você tem um olho impecável para a beleza e um coração muito generoso."
+      },
+
+      applejack: {
+        nome: "Applejack",
+        img: "https://img1.picmix.com/output/stamp/normal/8/3/7/2/1882738_f1608.png",
+        desc: "Honestidade e trabalho duro definem você. É a base firme do seu grupo."
+      },
+
+      celestia: {
+        nome: "Princesa Celestia",
+        img: "https://www.pngkey.com/png/full/844-8441475_princess-celestia-by-shaynellelps-d9oq2i-princess-celestia.png",
+        desc: "Uma líder nata, sábia e que sempre pensa no bem maior."
+      },
+
+      luna: {
+        nome: "Princesa Luna",
+        img: "https://i.pinimg.com/originals/5d/e0/c2/5de0c21d32e5c02cb1251967057e87a3.png",
+        desc: "Reflexiva e misteriosa, você encontra força e criatividade no silêncio."
+      }
+    };
+
+    let perguntas = [
+      { q: "Você gosta de aprender coisas novas?", t: "twilight" },
+      { q: "Você gosta de competir?", t: "rainbow" },
+      { q: "Você gosta de festa?", t: "pinkie" },
+      { q: "Você prefere calma?", t: "fluttershy" },
+      { q: "Você gosta de moda?", t: "rarity" },
+      { q: "Você é honesto?", t: "applejack" },
+      { q: "Você pensa no coletivo?", t: "celestia" },
+      { q: "Você gosta da noite?", t: "luna" },
+      { q: "Você prefere planejar tudo?", t: "twilight" },
+      { q: "Você age rápido?", t: "rainbow" },
+      { q: "Você anima os outros?", t: "pinkie" },
+      { q: "Você evita conflitos?", t: "fluttershy" },
+      { q: "Você gosta de beleza?", t: "rarity" },
+      { q: "Você gosta de trabalho físico?", t: "applejack" },
+      { q: "Você gosta de liderar?", t: "celestia" },
+      { q: "Você gosta de refletir?", t: "luna" },
+      { q: "Você confia na lógica?", t: "twilight" },
+      { q: "Você ama liberdade?", t: "rainbow" },
+      { q: "Você é imprevisível?", t: "pinkie" },
+      { q: "Você é tímido?", t: "fluttershy" },
+      { q: "Você é perfeccionista?", t: "rarity" },
+      { q: "Você é direto?", t: "applejack" },
+      { q: "Você é calmo sob pressão?", t: "celestia" },
+      { q: "Você se sente incompreendido?", t: "luna" }
+    ];
+
+    perguntas.sort(() => Math.random() - 0.5);
+
+    let atual = 0;
+    let escolhaAtual = 0.5;
+
+    let pontos = {
+      twilight: 0,
+      rainbow: 0,
+      pinkie: 0,
+      fluttershy: 0,
+      rarity: 0,
+      applejack: 0,
+      celestia: 0,
+      luna: 0
+    };
+
+    /*
+      FUNÇÃO CORRIGIDA DO BOTÃO VOLTAR PARA HOME
+    
+      Antes o botão fazia:
+      window.location.href = 'index.html'
+    
+      Isso recarregava o index do zero e caía no cadastro.
+    
+      Agora ele:
+      1. Salva um aviso no navegador dizendo que deve abrir a Home.
+      2. Salva um usuário visitante caso não exista usuário salvo.
+      3. Vai para index.html?home=1.
+    */
+    function voltarParaHome() {
+      localStorage.setItem("ponytopia_abrir_home", "sim");
+      sessionStorage.setItem("ponytopia_abrir_home", "sim");
+
+      if (!localStorage.getItem("ponytopia_usuario_atual")) {
+        const visitante = {
+          nome: "Visitante",
+          poney: "Twilight"
+        };
+
+        localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(visitante));
+      }
+
+      window.location.href = "index.html?home=1";
+    }
+
+    function mostrarPergunta() {
+      const el = document.getElementById("pergunta");
+
+      el.style.opacity = 0;
+
+      setTimeout(() => {
+        el.innerText = perguntas[atual].q;
+        document.getElementById("progresso").innerText = `PASSO ${atual + 1} DE ${perguntas.length}`;
+        document.getElementById("btn-confirmar").disabled = true;
+        document.getElementById("seletor").style.left = "50%";
+        el.style.opacity = 1;
+      }, 300);
+    }
+
+    function selecionar(e) {
+      e.preventDefault();
+
+      let rect = e.currentTarget.getBoundingClientRect();
+
+      let clientX;
+
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+      } else {
+        clientX = e.clientX;
+      }
+
+      escolhaAtual = (clientX - rect.left) / rect.width;
+
+      if (escolhaAtual < 0) {
+        escolhaAtual = 0;
+      }
+
+      if (escolhaAtual > 1) {
+        escolhaAtual = 1;
+      }
+
+      document.getElementById("seletor").style.left = (escolhaAtual * 100) + "%";
+      document.getElementById("btn-confirmar").disabled = false;
+    }
+
+    function confirmar() {
+      let tipo = perguntas[atual].t;
+
+      if (escolhaAtual < 0.4) {
+        pontos[tipo] -= 1;
+      } else if (escolhaAtual > 0.6) {
+        pontos[tipo] += 1;
+      }
+
+      atual++;
+
+      if (atual < perguntas.length) {
+        mostrarPergunta();
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function mostrarResultado() {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff4081', '#ab47bc', '#00e5ff', '#ba68c8']
+      });
+
+      let vencedorKey = Object.keys(pontos).reduce((a, b) => pontos[a] > pontos[b] ? a : b);
+      let p = infoPonies[vencedorKey];
+
+      document.getElementById("quiz-box").innerHTML = `
+    <div class="resultado-card">
+      <h2 style="margin-bottom:5px">Você seria a...</h2>
+      <h1 style="color:#c2185b; font-size:35px; margin:10px 0;">${p.nome}</h1>
+      <img src="${p.img}" class="pony-img" alt="${p.nome}">
+      <p style="font-size:18px; color:#4a148c; font-weight:500; padding:10px;">${p.desc}</p>
+      <button onclick="location.reload()">Refazer Quiz</button>
+    </div>
+  `;
+    }
+
+    mostrarPergunta();
+  </script>
+
+</body>
+
+</html>
