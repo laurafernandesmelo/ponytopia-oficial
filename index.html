@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equestria RPG & Ponytopia</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap"
+    rel="stylesheet">
 
 <style>
     /* --- CONFIGURAÇÕES DE CORES E FONTES --- */
@@ -31,7 +33,7 @@
         background: white;
         padding: 25px;
         border-radius: 20px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         width: 100%;
         max-width: 450px;
         text-align: center;
@@ -101,7 +103,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.85);
+        background: rgba(0, 0, 0, 0.85);
         z-index: 9999;
         justify-content: center;
         align-items: center;
@@ -121,7 +123,7 @@
         background-color: var(--mlp-purple);
         border-radius: 0 0 20px 20px;
         z-index: 1;
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .envelope-front {
@@ -215,7 +217,7 @@
         color: white;
         padding: 12px 25px;
         border-bottom: 4px solid var(--mlp-gold);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
     .menu-icon {
@@ -260,7 +262,7 @@
         padding-top: 80px;
         z-index: 1000;
         color: white;
-        box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
     }
 
     .menu-lateral.ativo {
@@ -272,7 +274,7 @@
         font-family: 'Pacifico', cursive;
         color: var(--mlp-gold);
         font-size: 22px;
-        border-bottom: 1px solid rgba(225,149,255,0.2);
+        border-bottom: 1px solid rgba(225, 149, 255, 0.2);
         margin-bottom: 10px;
     }
 
@@ -298,7 +300,7 @@
     .overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.6);
         display: none;
         z-index: 999;
         backdrop-filter: blur(3px);
@@ -351,7 +353,7 @@
 
     .search-box input:focus {
         border-color: var(--mlp-gold);
-        box-shadow: 0 0 10px rgba(225,149,255,0.2);
+        box-shadow: 0 0 10px rgba(225, 149, 255, 0.2);
         outline: none;
     }
 
@@ -391,7 +393,7 @@
         border-radius: 20px;
         padding: 15px;
         text-align: center;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         transition: 0.3s;
         border: 3px solid transparent;
         cursor: pointer;
@@ -424,15 +426,15 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.8);
+        background: rgba(0, 0, 0, 0.8);
         z-index: 10000;
         justify-content: center;
         align-items: center;
     }
 
     /* ==========================================================
-       MAPA DE EQUESTRIA
-    ========================================================== */
+   MAPA DE EQUESTRIA
+========================================================== */
 
     #mapa-equestria-overlay {
         position: fixed;
@@ -454,10 +456,10 @@
         width: 100%;
         max-width: 1100px;
         min-height: 90vh;
-        background: rgba(255,255,255,0.94);
+        background: rgba(255, 255, 255, 0.94);
         border-radius: 30px;
         border: 4px solid var(--mlp-gold);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
         padding: 25px;
         box-sizing: border-box;
         text-align: center;
@@ -504,7 +506,7 @@
         border-radius: 20px;
         border: 4px solid var(--mlp-purple);
         background: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
 
     .mapa-seta {
@@ -520,7 +522,7 @@
         font-size: 38px;
         font-weight: bold;
         cursor: pointer;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -590,15 +592,15 @@
     }
 
     /* ==========================================================
-       RECOMPENSA DIÁRIA + ÁLBUM
-    ========================================================== */
+   RECOMPENSA DIÁRIA + ÁLBUM
+========================================================== */
 
     #daily-reward-overlay {
         position: fixed;
         inset: 0;
         z-index: 20000;
         display: none;
-        background: rgba(0,0,0,0.65);
+        background: rgba(0, 0, 0, 0.65);
         backdrop-filter: blur(8px);
     }
 
@@ -626,7 +628,7 @@
         z-index: 1;
         width: 1200px;
         height: 1200px;
-        background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 70%);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 70%);
         top: -400px;
         left: -400px;
     }
@@ -685,7 +687,7 @@
         padding: 8px;
         border-radius: 50px;
         backdrop-filter: blur(5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     }
 
     .nav-btn {
@@ -767,7 +769,7 @@
         position: absolute;
         bottom: 0;
         left: 10px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         z-index: 4;
     }
 
@@ -856,7 +858,7 @@
         height: auto;
         display: block;
         -webkit-user-drag: none;
-        filter: drop-shadow(0 30px 60px rgba(0,0,0,0.15));
+        filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.15));
         transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
@@ -880,7 +882,7 @@
 
     .stage-2 .pack-half {
         animation: shake-heavy 0.2s infinite;
-        filter: brightness(1.2) drop-shadow(0 0 40px rgba(255,255,255,0.6));
+        filter: brightness(1.2) drop-shadow(0 0 40px rgba(255, 255, 255, 0.6));
     }
 
     .stage-3 .pack-top {
@@ -934,7 +936,7 @@
         font-weight: bold;
         padding: 3px 8px;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         z-index: 50;
         animation: zoomIn 0.3s ease;
     }
@@ -944,7 +946,7 @@
         height: 195px;
         background: white;
         border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         border: 5px solid white;
         overflow: hidden;
         transition: transform 0.3s;
@@ -969,7 +971,7 @@
         padding: 25px;
         border-radius: 25px;
         backdrop-filter: blur(10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         border: 4px solid #fff;
         overflow-y: auto;
         text-align: center;
@@ -1009,7 +1011,7 @@
         border-radius: 20px;
         font-size: 1.2rem;
         font-weight: bold;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         text-align: center;
     }
 
@@ -1039,7 +1041,7 @@
         padding: 20px;
         border-radius: 25px;
         text-align: center;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
         max-width: 90%;
         width: 340px;
         transform: scale(0.7);
@@ -1057,7 +1059,7 @@
         overflow: hidden;
         border: 8px solid #f3ecff;
         margin-bottom: 15px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     .modal-card-view img {
@@ -1092,8 +1094,10 @@
     }
 
     @keyframes shake-light {
-        0%, 100% {
-            transform: translate(0,0);
+
+        0%,
+        100% {
+            transform: translate(0, 0);
         }
 
         50% {
@@ -1102,8 +1106,10 @@
     }
 
     @keyframes shake-heavy {
-        0%, 100% {
-            transform: translate(0,0);
+
+        0%,
+        100% {
+            transform: translate(0, 0);
         }
 
         25% {
@@ -1183,211 +1189,6 @@
         }
     }
 
-    /* ==========================================================
-       BOUTIQUE DA RARITY
-    ========================================================== */
-
-    #boutique-rarity-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 30000;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        background: rgba(0,0,0,0.82);
-        backdrop-filter: blur(8px);
-    }
-
-    #boutique-rarity-overlay.ativo {
-        display: flex;
-    }
-
-    #boutique-rarity-app {
-        width: 100%;
-        min-height: 100vh;
-        font-family: 'Segoe UI', sans-serif;
-        background: radial-gradient(circle, #251242 0%, #050208 100%);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        padding: 20px;
-    }
-
-    #boutique-rarity-app * {
-        box-sizing: border-box;
-    }
-
-    #boutique-rarity-app button {
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    #boutique-rarity-app button:hover {
-        box-shadow: none;
-    }
-
-    .boutique-close-btn {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 100;
-        width: auto;
-        margin: 0;
-        padding: 8px 14px;
-        border: none;
-        border-radius: 12px;
-        background: #cbb4ff;
-        color: #0c0418;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    #boutique-rarity-app .app-viewport {
-        width: 95%;
-        max-width: 550px;
-        position: relative;
-        box-shadow: 0 0 80px rgba(0,0,0,0.95);
-        border-radius: 25px;
-        overflow: hidden;
-        line-height: 0;
-        background: #0c0418;
-    }
-
-    #boutique-rarity-app .screen {
-        display: none;
-        width: 100%;
-        position: relative;
-    }
-
-    #boutique-rarity-app .screen.active {
-        display: block;
-    }
-
-    #boutique-rarity-app img.bg-screen {
-        width: 100%;
-        display: block;
-    }
-
-    #botao-play-capa {
-        position: absolute;
-        top: 67.5%;
-        left: 49.5%;
-        transform: translate(-50%, -50%);
-        width: 55px;
-        height: 55px;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        z-index: 10;
-        background: transparent;
-        margin: 0;
-        padding: 0;
-    }
-
-    #screen-select {
-        position: relative;
-    }
-
-    #boutique-rarity-app .hitbox-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    #boutique-rarity-app .hitbox {
-        position: absolute;
-        cursor: pointer;
-        border-radius: 15px;
-    }
-
-    #boutique-rarity-app .hb-rarity {
-        top: 18%;
-        left: 12%;
-        width: 35%;
-        height: 32%;
-    }
-
-    #boutique-rarity-app .hb-fluttershy {
-        top: 18%;
-        left: 53%;
-        width: 35%;
-        height: 32%;
-    }
-
-    #boutique-rarity-app .hb-twilight {
-        top: 52%;
-        left: 12%;
-        width: 35%;
-        height: 32%;
-    }
-
-    #boutique-rarity-app .hb-pinkie {
-        top: 52%;
-        left: 53%;
-        width: 35%;
-        height: 32%;
-    }
-
-    #screen-boutique {
-        padding: 40px 20px;
-        background: #0c0418;
-        text-align: center;
-        min-height: 500px;
-        line-height: normal;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #screen-boutique.active {
-        display: flex;
-    }
-
-    #boutique-rarity-app .pony-display {
-        width: 100%;
-        height: 200px;
-        border: 3px solid #cbb4ff;
-        border-radius: 25px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 1.5em;
-        background: rgba(255,255,255,0.05);
-        white-space: pre-line;
-    }
-
-    #boutique-rarity-app .clothes {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        width: 100%;
-    }
-
-    #boutique-rarity-app .cloth {
-        background: white;
-        color: black;
-        padding: 15px;
-        border-radius: 10px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    #boutique-rarity-app .btn-voltar {
-        width: auto;
-        margin-top: 20px;
-        background: none;
-        border: 2px solid white;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-        cursor: pointer;
-    }
 </style>
 
 </head>
@@ -1397,7 +1198,8 @@
 <div class="container" id="tela-cadastro">
     <h1 style="font-family:'Pacifico'; font-size: 30px; color: var(--mlp-dark-purple);">Criar Conta</h1>
     <input id="reg-nome" placeholder="Nome de Usuário">
-    <input id="reg-nascimento" placeholder="Data de Nascimento (dd/mm/aaaa)" maxlength="10" oninput="formatarData(this)">
+    <input id="reg-nascimento" placeholder="Data de Nascimento (dd/mm/aaaa)" maxlength="10"
+        oninput="formatarData(this)">
     <select id="reg-genero">
         <option value="">Selecione o Gênero</option>
         <option>Feminino</option>
@@ -1406,7 +1208,8 @@
     </select>
     <input type="password" id="reg-senha" placeholder="Sua senha">
     <button onclick="irParaSelecao()">Próximo: Escolher Avatar</button>
-    <p style="cursor:pointer; color:var(--mlp-dark-purple); font-weight:bold; margin-top:15px;" onclick="mostrarLogin()">Já tenho conta</p>
+    <p style="cursor:pointer; color:var(--mlp-dark-purple); font-weight:bold; margin-top:15px;"
+        onclick="mostrarLogin()">Já tenho conta</p>
 </div>
 
 <div class="container" id="tela-selecao" style="display:none">
@@ -1421,7 +1224,8 @@
     <input id="log-senha" type="password" placeholder="Sua senha">
     <button onclick="entrar()">Entrar no Jogo</button>
     <button style="background:#6c757d" onclick="entrarVisitante()">Entrar como Visitante</button>
-    <p style="cursor:pointer; color:var(--mlp-dark-purple); font-weight:bold; margin-top:15px;" onclick="mostrarCadastro()">Criar conta</p>
+    <p style="cursor:pointer; color:var(--mlp-dark-purple); font-weight:bold; margin-top:15px;"
+        onclick="mostrarCadastro()">Criar conta</p>
 </div>
 
 <div id="portal-carta">
@@ -1430,12 +1234,15 @@
         <div class="envelope-front"></div>
         <div class="letter" id="letter">
             <div>
-                <h2 style="font-family: 'Pacifico'; color: var(--mlp-dark-purple);">Caro(a) <span id="magic-user-name"></span>,</h2>
+                <h2 style="font-family: 'Pacifico'; color: var(--mlp-dark-purple);">Caro(a) <span
+                        id="magic-user-name"></span>,</h2>
                 <p style="font-weight:600;">Um novo destino aguarda em Equestria. Aceita o chamado?</p>
             </div>
             <div style="display:flex; gap:10px; justify-content:center; margin-top: 20px;">
-                <button style="width:100px; border-radius:20px; background:var(--mlp-gold); color:white" onclick="queimarCarta()">SIM!</button>
-                <button id="btn-nao" style="width:100px; border-radius:20px; background:#ddd; color:#333">NÃO</button>
+                <button style="width:100px; border-radius:20px; background:var(--mlp-gold); color:white"
+                    onclick="queimarCarta()">SIM!</button>
+                <button id="btn-nao"
+                    style="width:100px; border-radius:20px; background:#ddd; color:#333">NÃO</button>
             </div>
         </div>
         <div class="envelope-wrapper"></div>
@@ -1457,6 +1264,7 @@
         <h3>🎮 Atividades</h3>
         <a href="#" onclick="abrirMapaEquestria(); toggleMenu();"><span>🗺️</span> Mapa de Equestria</a>
         <a href="#"><span>🌈</span> Galeria de Arte</a>
+        <a href="./boutique.html?v=50"><span>👗</span> Boutique da Rarity</a>
         <a href="#" onclick="abrirQuiz(); toggleMenu();"><span>🧠</span> Teste de Elementos</a>
         <a href="#" onclick="abrirPonyColor(); toggleMenu();"><span>📖</span> Diário Mágico</a>
         <a href="#" onclick="abrirRecompensaDiaria(); toggleMenu();"><span>🎁</span> Recompensa Diária</a>
@@ -1488,32 +1296,40 @@
             </div>
 
             <div class="jogo-card" data-nome="quiz elementos" data-cat="quiz" onclick="abrirQuiz()">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLcS6NnetzUhMydMsgoVqH--MRvgEEOdM2pB8zBA2XFxGw68DoST-Honi6jydIv-1jm7eHEaLX_DptXWURHIAJ8tr3z4BCihCgEUMnGMpvoQ&s=10">
+                <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLcS6NnetzUhMydMsgoVqH--MRvgEEOdM2pB8zBA2XFxGw68DoST-Honi6jydIv-1jm7eHEaLX_DptXWURHIAJ8tr3z4BCihCgEUMnGMpvoQ&s=10">
                 <span>Teste de Personalidade</span>
             </div>
 
-           <div class="jogo-card" data-nome="diario sentimentos pintura ponycolor" data-cat="social" onclick="abrirPonyColor()">
+            <div class="jogo-card" data-nome="diario sentimentos pintura ponycolor" data-cat="social"
+                onclick="abrirPonyColor()">
 
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfsKVElxJR57blusabDhZZgE8RK7COxWgPqowcREHKQ9etkKq3qQT2MfTBAOz0BaqwiXMGaVUsYR5XOHF3mAKRrQxPjIOuhl1ixwRp9JGF&s=10">
+                <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfsKVElxJR57blusabDhZZgE8RK7COxWgPqowcREHKQ9etkKq3qQT2MfTBAOz0BaqwiXMGaVUsYR5XOHF3mAKRrQxPjIOuhl1ixwRp9JGF&s=10">
 
-<span>Diário de Amizade</span>
+                <span>Diário de Amizade</span>
 
-</div>
-
-            <div class="jogo-card" data-nome="vestir raridade boutique rarity moda" data-cat="social" onclick="abrirBoutiqueRarity()">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrX51t_lIv-XJw9lQHe2lkAWGZm6KBkOwrOIpBtnouBpYVWuQsaNGJvRgkhcnROL70xYvyWXk8IYnGdfxp51X6651Mkn2nq1vQg8R3jAWe&s=10">
-                <span>Boutique da Rarity</span>
             </div>
+
+        <a class="jogo-card" 
+               data-nome="vestir raridade boutique rarity moda" 
+               data-cat="social" 
+               href="./boutique.html?v=50"
+               style="text-decoration: none; display: block;">
+                <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrX51t_lIv-XJw9lQHe2lkAWGZm6KBkOwrOIpBtnouBpYVWuQsaNGJvRgkhcnROL70xYvyWXk8IYnGdfxp51X6651Mkn2nq1vQg8R3jAWe&s=10"
+                    alt="Boutique da Rarity">
+                <span>Boutique da Rarity</span>
+            </a>
 
         </div>
     </main>
 </div>
 
 <!-- ==========================================================
-     MAPA DE EQUESTRIA
-========================================================== -->
-<div id="mapa-equestria-overlay">
-    <div id="mapa-equestria-app">
+ MAPA DE EQUESTRIA
+
+========================================================== --><div id="mapa-equestria-overlay"><div id="mapa-equestria-app">
 
         <button class="mapa-voltar-home" onclick="fecharMapaEquestria()">
             ⬅ Voltar para Home
@@ -1546,17 +1362,18 @@
 </div>
 
 <!-- ==========================================================
-     RECOMPENSA DIÁRIA + ÁLBUM
-========================================================== -->
-<div id="daily-reward-overlay">
-    <div id="daily-reward-app">
+ RECOMPENSA DIÁRIA + ÁLBUM
+
+========================================================== --><div id="daily-reward-overlay"><div id="daily-reward-app">
 
         <button class="daily-close-btn" onclick="fecharRecompensaDiaria()">Fechar</button>
         <button class="debug-btn" onclick="resetarTeste()">Resetar Teste (Limpar Dia)</button>
 
         <div class="nav-menu">
-            <button class="nav-btn active" id="btn-tab-pacote" onclick="mudarAba('pacote')">🎁 Recompensa Diária</button>
-            <button class="nav-btn" id="btn-tab-album" onclick="mudarAba('album')">📖 Meu Álbum (<span id="total-obtidas">0</span>/22)</button>
+            <button class="nav-btn active" id="btn-tab-pacote" onclick="mudarAba('pacote')">🎁 Recompensa
+                Diária</button>
+            <button class="nav-btn" id="btn-tab-album" onclick="mudarAba('album')">📖 Meu Álbum (<span
+                    id="total-obtidas">0</span>/22)</button>
         </div>
 
         <div class="view-content" id="main-container">
@@ -1581,12 +1398,15 @@
                 </div>
 
                 <div id="pacote" class="pack-wrapper" style="display: none;">
-                    <img src="pacote.png" class="pack-half pack-top" alt="Pacote" onerror="this.src='https://via.placeholder.com/400x500/b194e8/ffffff?text=Clique+para+Abrir!'">
-                    <img src="pacote.png" class="pack-half pack-bottom" alt="Pacote" onerror="this.src='https://via.placeholder.com/400x500/b194e8/ffffff?text=Clique+para+Abrir!'">
+                    <img src="pacote.png" class="pack-half pack-top" alt="Pacote"
+                        onerror="this.src='https://via.placeholder.com/400x500/b194e8/ffffff?text=Clique+para+Abrir!'">
+                    <img src="pacote.png" class="pack-half pack-bottom" alt="Pacote"
+                        onerror="this.src='https://via.placeholder.com/400x500/b194e8/ffffff?text=Clique+para+Abrir!'">
                 </div>
 
                 <div id="reward" class="reward-screen">
-                    <h1 style="color: #a385e0; font-size: 2.2rem; text-shadow: 2px 2px white;">✦ NOVAS FIGURINHAS! ✦</h1>
+                    <h1 style="color: #a385e0; font-size: 2.2rem; text-shadow: 2px 2px white;">✦ NOVAS FIGURINHAS! ✦
+                    </h1>
                     <div class="cards-container" id="display-cartas"></div>
                     <button class="btn-action" onclick="irParaOAlbum()">Guardar e Ver Álbum</button>
                 </div>
@@ -1595,7 +1415,8 @@
             <div id="panel-album" class="tab-panel">
                 <div class="album-wrapper">
                     <h2 style="color: #6c529c; font-size: 1.8rem;">📖 Minhas Figurinhas Coletadas</h2>
-                    <p style="color: #888; font-size: 0.9rem; margin-bottom: 10px;">Clique em uma figurinha colorida para ampliá-la!</p>
+                    <p style="color: #888; font-size: 0.9rem; margin-bottom: 10px;">Clique em uma figurinha colorida
+                        para ampliá-la!</p>
                     <div class="album-grid" id="album-grid"></div>
                 </div>
             </div>
@@ -1610,43 +1431,6 @@
                 <div class="modal-title" id="modal-nome">Nome do Pônei</div>
                 <button class="btn-action" onclick="fecharModal()">Fechar</button>
             </div>
-        </div>
-
-    </div>
-</div>
-
-<!-- ==========================================================
-     BOUTIQUE DA RARITY
-========================================================== -->
-<div id="boutique-rarity-overlay">
-    <div id="boutique-rarity-app">
-
-        <button class="boutique-close-btn" onclick="fecharBoutiqueRarity()">Fechar</button>
-
-        <div class="app-viewport">
-
-            <div id="screen-cover" class="screen active">
-                <img src="./img/rarity.png?v=1" class="bg-screen" alt="Capa" onerror="this.onerror=null; this.src='rarity.png?v=1';">
-                <button id="botao-play-capa" onclick="boutiqueShowScreen('screen-select')"></button>
-            </div>
-
-            <div id="screen-select" class="screen">
-                <img src="./img/poneis.png?v=1" class="bg-screen" alt="Seleção de Pôneis" onerror="this.onerror=null; this.src='poneis.png?v=1';">
-                <div class="hitbox-container">
-                    <div class="hitbox hb-rarity" onclick="boutiqueSelectPony('Rarity')"></div>
-                    <div class="hitbox hb-fluttershy" onclick="boutiqueSelectPony('Fluttershy')"></div>
-                    <div class="hitbox hb-twilight" onclick="boutiqueSelectPony('Twilight Sparkle')"></div>
-                    <div class="hitbox hb-pinkie" onclick="boutiqueSelectPony('Pinkie Pie')"></div>
-                </div>
-            </div>
-
-            <div id="screen-boutique" class="screen">
-                <h2 id="title" style="margin-top:0">Boutique</h2>
-                <div id="ponyDisplay" class="pony-display">Pônei</div>
-                <div id="clothes" class="clothes"></div>
-                <button class="btn-voltar" onclick="boutiqueShowScreen('screen-select')">Sair da Boutique</button>
-            </div>
-
         </div>
 
     </div>
@@ -1730,19 +1514,17 @@
         };
         iniciarFluxoCarta();
     }
+function iniciarFluxoCarta() {
+    localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(usuarioAtual));
 
-    function iniciarFluxoCarta() {
-        localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(usuarioAtual));
+    document.getElementById('tela-cadastro').style.display = 'none';
+    document.getElementById('tela-selecao').style.display = 'none';
+    document.getElementById('tela-login').style.display = 'none';
+    document.getElementById('main-app').style.display = 'none';
 
-        document.getElementById('tela-cadastro').style.display = 'none';
-        document.getElementById('tela-selecao').style.display = 'none';
-        document.getElementById('tela-login').style.display = 'none';
-        document.getElementById('main-app').style.display = 'none';
-
-        document.getElementById('portal-carta').style.display = 'flex';
-        document.getElementById('magic-user-name').innerText = usuarioAtual.nome;
-    }
-
+    document.getElementById('portal-carta').style.display = 'flex';
+    document.getElementById('magic-user-name').innerText = usuarioAtual.nome;
+}
     function queimarCarta() {
         document.getElementById('letter').classList.add('burn-effect');
         setTimeout(() => {
@@ -2128,73 +1910,27 @@
         mudarAba('album');
     }
 
-    /* ==========================================================
-       BOUTIQUE DA RARITY
-    ========================================================== */
-
-    let boutiqueSelectedPony = "";
-    const boutiqueAllClothes = ["Vestido Gala", "Estilo Roxo", "Look Diamante", "Moda Luxo"];
-
-    function abrirBoutiqueRarity() {
-        document.getElementById('boutique-rarity-overlay').classList.add('ativo');
-        boutiqueShowScreen('screen-cover');
-    }
-
-    function fecharBoutiqueRarity() {
-        document.getElementById('boutique-rarity-overlay').classList.remove('ativo');
-    }
-
-    function boutiqueShowScreen(id) {
-        document.querySelectorAll("#boutique-rarity-app .screen").forEach(s => s.classList.remove("active"));
-        document.getElementById(id).classList.add("active");
-    }
-
-    function boutiqueSelectPony(name) {
-        boutiqueSelectedPony = name;
-
-        localStorage.setItem("boutique_ponei_escolhido", name);
-
-        window.location.href = "boutique.html?pony=" + encodeURIComponent(name) + "&v=80";
-    }
-
-   function boutiqueRenderClothes() {
-        const containerBoutique = document.getElementById("clothes");
-        containerBoutique.innerHTML = "";
-
-        boutiqueAllClothes.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "cloth";
-            div.innerText = item;
-            div.onclick = () => boutiqueDress(item);
-            containerBoutique.appendChild(div);
-        });
-    }
-
-    function boutiqueDress(item) {
-        document.getElementById("ponyDisplay").innerText = boutiqueSelectedPony + "\n👗\n" + item;
-    }
-
     function abrirQuiz() {
         window.location.href = "quiz.html";
     }
 
-    function abrirPonyColor() {
+   function abrirPonyColor() {
         window.location.href = "ponycolor.html";
     }
 
     /*
-       Quando a Boutique ou outros jogos voltarem com index.html?home=1,
-       o index abre direto na Home, sem cair no cadastro.
+        Quando voltar do PonyColor, essa função abre direto a Home,
+        sem passar pelo cadastro.
     */
     function abrirHomeAoVoltarDosJogos() {
         const parametros = new URLSearchParams(window.location.search);
 
-        const deveAbrirHome =
+        const veioDoPonyColor =
             parametros.get("home") === "1" ||
             localStorage.getItem("ponytopia_abrir_home") === "sim" ||
             sessionStorage.getItem("ponytopia_abrir_home") === "sim";
 
-        if (!deveAbrirHome) {
+        if (!veioDoPonyColor) {
             return;
         }
 
@@ -2208,7 +1944,7 @@
         } else {
             usuarioAtual = {
                 nome: "Visitante",
-                poney: "Rarity"
+                poney: "Twilight"
             };
 
             localStorage.setItem("ponytopia_usuario_atual", JSON.stringify(usuarioAtual));
@@ -2222,16 +1958,18 @@
 
         carregarHome();
 
-        if (parametros.get("abrirBoutique") === "1") {
-            setTimeout(() => abrirBoutiqueRarity(), 300);
-        }
-
         window.history.replaceState({}, document.title, "index.html");
     }
 
     abrirHomeAoVoltarDosJogos();
 
+
+    function abrirBoutiqueNova() {
+        window.location.href = "./boutique.html?v=50";
+    }
+
 </script>
 
 </body>
+
 </html>
